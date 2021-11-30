@@ -254,11 +254,7 @@ public class MembersLogin extends javax.swing.JFrame {
               con.close();
          } catch (SQLException ex)   {
               JOptionPane.showMessageDialog(this,ex.getMessage());
-         } catch (IOException ex) {
-          Logger.getLogger(MembersLogin.class.getName()).log(Level.SEVERE, null, ex);
-      } catch (ClassNotFoundException ex) {
-          Logger.getLogger(MembersLogin.class.getName()).log(Level.SEVERE, null, ex);
-      }
+         }
         
     }//GEN-LAST:event_jButton1MouseClicked
 
