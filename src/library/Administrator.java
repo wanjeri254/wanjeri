@@ -86,10 +86,11 @@ public class Administrator extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(255, 204, 204));
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 3, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Castellar", 1, 24)); // NOI18N
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-library-50.png"))); // NOI18N
-        jLabel1.setText("Library System");
+        jLabel1.setText("Tusome Library System");
 
+        jButton20.setFont(new java.awt.Font("Book Antiqua", 3, 12)); // NOI18N
         jButton20.setText("Logout");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -97,11 +98,10 @@ public class Administrator extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(102, 102, 102)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 508, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton20)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -113,40 +113,62 @@ public class Administrator extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jTabbedPane1.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel7.setText("Librarian_id");
+        jLabel7.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel7.setText("Librarian ID:");
 
-        jLabel8.setText("Name");
+        jLabel8.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel8.setText("Name:");
 
-        jLabel9.setText("Contact");
+        jLabel9.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel9.setText("Contact:");
 
-        jLabel10.setText("Email");
+        jLabel10.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel10.setText("Email:");
 
-        jLabel11.setText("Gender");
+        jLabel11.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel11.setText("Gender:");
 
-        jLabel12.setText("Password");
+        jLabel12.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel12.setText("Password:");
 
+        jTextField6.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField6ActionPerformed(evt);
             }
         });
 
+        jTextField7.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jTextField8.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jTextField9.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jTextField10.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField10ActionPerformed(evt);
             }
         });
 
+        jTextField11.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jButton3.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
         jButton3.setText("Save");
 
+        jButton4.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
         jButton4.setText("Update");
 
+        jButton5.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
         jButton5.setText("Delete");
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
+        jTable1.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -192,7 +214,7 @@ public class Administrator extends javax.swing.JFrame {
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 32, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -238,16 +260,32 @@ public class Administrator extends javax.swing.JFrame {
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel2.setText("HOST");
+        jLabel2.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel2.setText("HOST:");
 
-        jLabel3.setText("SCHEMA");
+        jLabel3.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel3.setText("SCHEMA:");
 
-        jLabel4.setText("PASSWORD");
+        jLabel4.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel4.setText("PASSWORD:");
 
-        jLabel5.setText("PORT");
+        jLabel5.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel5.setText("PORT:");
 
-        jLabel6.setText("USERNAME");
+        jLabel6.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel6.setText("USERNAME:");
 
+        jTextField1.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jTextField2.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jTextField3.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jTextField4.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jTextField5.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jButton1.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
         jButton1.setText("SAVE");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -255,6 +293,7 @@ public class Administrator extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
         jButton2.setText("TEST");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -289,6 +328,7 @@ public class Administrator extends javax.swing.JFrame {
                             .addComponent(jTextField4)
                             .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)))
                     .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
                         .addComponent(jButton1)
                         .addGap(28, 28, 28)
                         .addComponent(jButton2)))
@@ -328,7 +368,7 @@ public class Administrator extends javax.swing.JFrame {
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton1)
                             .addComponent(jButton2))
-                        .addGap(0, 235, Short.MAX_VALUE))
+                        .addGap(0, 244, Short.MAX_VALUE))
                     .addComponent(jScrollPane1))
                 .addContainerGap())
         );
@@ -340,14 +380,14 @@ public class Administrator extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jTabbedPane1)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1))
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

@@ -196,26 +196,30 @@ public class Librarians extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(255, 204, 204));
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 3, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Castellar", 1, 24)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-library-50.png"))); // NOI18N
-        jLabel1.setText("Library System");
+        jLabel1.setText("Tusome Library System");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(284, 284, 284)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(235, 235, 235)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addComponent(jLabel1)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
+        jLabel1.getAccessibleContext().setAccessibleName("Tusome Library System");
+
+        jTabbedPane1.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
         jTabbedPane1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTabbedPane1MouseClicked(evt);
@@ -224,25 +228,36 @@ public class Librarians extends javax.swing.JFrame {
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel24.setText("Borrower_id");
+        jLabel24.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel24.setText("Borrower ID:");
 
-        jLabel25.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jTextField21.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jLabel25.setFont(new java.awt.Font("Book Antiqua", 1, 18)); // NOI18N
         jLabel25.setText("BOOK  DETAILS");
 
-        jLabel26.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel26.setFont(new java.awt.Font("Book Antiqua", 1, 18)); // NOI18N
         jLabel26.setText("LIBRARIAN  DETAILS");
 
-        jLabel27.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel27.setFont(new java.awt.Font("Book Antiqua", 1, 18)); // NOI18N
         jLabel27.setText("READER  DETAILS");
 
-        jLabel28.setText("BOOK_ID");
+        jLabel28.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel28.setText("Book ID:");
+        jLabel28.setToolTipText("");
 
-        jLabel29.setText("TITLE");
+        jLabel29.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel29.setText("Title:");
 
-        jLabel30.setText("COPIES");
+        jLabel30.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel30.setText("Copies");
 
-        jLabel31.setText("FINE PER DAY");
+        jLabel31.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel31.setText("Fine per day:");
 
+        jTextField22.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jButton14.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
         jButton14.setText("SEARCH");
         jButton14.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -250,6 +265,7 @@ public class Librarians extends javax.swing.JFrame {
             }
         });
 
+        jTextField23.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField23.setEnabled(false);
         jTextField23.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -257,16 +273,22 @@ public class Librarians extends javax.swing.JFrame {
             }
         });
 
+        jTextField24.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField24.setEnabled(false);
 
+        jTextField25.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField25.setEnabled(false);
 
-        jLabel32.setText("ID");
+        jLabel32.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel32.setText("ID:");
 
-        jLabel33.setText("NAME");
+        jLabel33.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel33.setText("Name:");
 
+        jTextField27.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField27.setEnabled(false);
 
+        jButton15.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
         jButton15.setText("SEARCH");
         jButton15.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -274,10 +296,15 @@ public class Librarians extends javax.swing.JFrame {
             }
         });
 
-        jLabel34.setText("ID");
+        jLabel34.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel34.setText("ID:");
 
-        jLabel35.setText("NAME");
+        jLabel35.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel35.setText("Name:");
 
+        jTextField28.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jTextField29.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField29.setEnabled(false);
         jTextField29.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -285,6 +312,7 @@ public class Librarians extends javax.swing.JFrame {
             }
         });
 
+        jButton16.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
         jButton16.setText("SEARCH");
         jButton16.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -292,6 +320,7 @@ public class Librarians extends javax.swing.JFrame {
             }
         });
 
+        jButton17.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
         jButton17.setText("ISSUE");
         jButton17.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -299,9 +328,15 @@ public class Librarians extends javax.swing.JFrame {
             }
         });
 
-        jLabel36.setText("DATE OFISSUE");
+        jLabel36.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel36.setText("Date of Issue:");
 
-        jLabel37.setText("DUE DATE");
+        jTextField30.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jLabel37.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel37.setText("Due Date:");
+
+        jTextField31.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -315,15 +350,10 @@ public class Librarians extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
-                            .addComponent(jLabel31)
-                            .addGap(18, 18, 18)
-                            .addComponent(jTextField25))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
-                            .addComponent(jLabel30)
-                            .addGap(47, 47, 47)
-                            .addComponent(jTextField24, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel31)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTextField25, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel28)
@@ -366,7 +396,7 @@ public class Librarians extends javax.swing.JFrame {
                                 .addComponent(jButton15))
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(jTextField30, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 144, Short.MAX_VALUE)
                                 .addComponent(jLabel37)))
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
@@ -384,11 +414,16 @@ public class Librarians extends javax.swing.JFrame {
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
                                 .addComponent(jTextField31, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(120, Short.MAX_VALUE))))
+                        .addContainerGap(174, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton17)
                 .addGap(406, 406, 406))
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(jLabel30)
+                .addGap(47, 47, 47)
+                .addComponent(jTextField24, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -445,23 +480,33 @@ public class Librarians extends javax.swing.JFrame {
                     .addComponent(jTextField31, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(53, 53, 53)
                 .addComponent(jButton17)
-                .addContainerGap(261, Short.MAX_VALUE))
+                .addContainerGap(126, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("BORROWING BOOK", jPanel4);
 
-        jLabel9.setText("ID");
+        jLabel9.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        jLabel9.setText("ID:");
 
-        jLabel10.setText("NAME");
+        jLabel10.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        jLabel10.setText("Name:");
 
-        jLabel11.setText("CONTACT");
+        jLabel11.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        jLabel11.setText("Contact:");
 
-        jLabel12.setText("EMAIL");
+        jLabel12.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        jLabel12.setText("Email:");
+        jLabel12.setToolTipText("");
 
-        jLabel13.setText("GENDER");
+        jLabel13.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        jLabel13.setText("Gender:");
 
-        jLabel14.setText("PASSWORD");
+        jLabel14.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        jLabel14.setText("Password");
 
+        jTextField13.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jButton7.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
         jButton7.setText("Save");
         jButton7.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -474,6 +519,7 @@ public class Librarians extends javax.swing.JFrame {
             }
         });
 
+        jButton8.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
         jButton8.setText("Update");
         jButton8.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -486,6 +532,7 @@ public class Librarians extends javax.swing.JFrame {
             }
         });
 
+        jButton9.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
         jButton9.setText("Delete");
         jButton9.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -495,6 +542,7 @@ public class Librarians extends javax.swing.JFrame {
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
+        jTable1.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
@@ -503,7 +551,7 @@ public class Librarians extends javax.swing.JFrame {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "NAME", "CONTACT", "EMAIL", "GENDER", "PASSWORD"
+                "ID", "Name", "Contact", "Email", "Gender", "Password"
             }
         ));
         jScrollPane2.setViewportView(jTable1);
@@ -541,7 +589,7 @@ public class Librarians extends javax.swing.JFrame {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(278, Short.MAX_VALUE))
+                .addContainerGap(387, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -588,30 +636,42 @@ public class Librarians extends javax.swing.JFrame {
 
         jPanel9.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel15.setText("ID");
+        jLabel15.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        jLabel15.setText("ID:");
 
-        jLabel16.setText("CAT_ID");
+        jLabel16.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        jLabel16.setText("Category ID:");
+        jLabel16.setToolTipText("");
 
-        jLabel17.setText("TITLE");
+        jLabel17.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        jLabel17.setText("Title:");
 
-        jLabel18.setText("EDITION");
+        jLabel18.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        jLabel18.setText("Edition:");
 
-        jLabel19.setText("AUTHOR");
+        jLabel19.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        jLabel19.setText("Author:");
 
-        jLabel20.setText("PUBLISHER");
+        jLabel20.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        jLabel20.setText("Publisher:");
 
-        jLabel21.setText("COPIES");
+        jLabel21.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        jLabel21.setText("Copies:");
 
-        jLabel22.setText("FINE");
+        jLabel22.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        jLabel22.setText("Fine:");
 
-        jLabel23.setText("REMARKS");
+        jLabel23.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        jLabel23.setText("Remarks:");
 
+        jTextField14.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField14.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField14ActionPerformed(evt);
             }
         });
 
+        jComboBox2.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jComboBox2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jComboBox2MouseClicked(evt);
@@ -623,24 +683,32 @@ public class Librarians extends javax.swing.JFrame {
             }
         });
 
+        jTextField15.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jTextField17.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField17.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField17ActionPerformed(evt);
             }
         });
 
+        jTextField18.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField18.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField18ActionPerformed(evt);
             }
         });
 
+        jTextField19.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField19.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField19ActionPerformed(evt);
             }
         });
 
+        jTextField20.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jButton11.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
         jButton11.setText("Save");
         jButton11.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -648,24 +716,30 @@ public class Librarians extends javax.swing.JFrame {
             }
         });
 
+        jButton12.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
         jButton12.setText("Update");
 
+        jButton13.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
         jButton13.setText("Delete");
 
+        jTextField46.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField46.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField46ActionPerformed(evt);
             }
         });
 
-        jLabel52.setText("CAT_NAME");
+        jLabel52.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        jLabel52.setText("Category Name:");
 
+        jComboBox3.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jComboBox3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox3ActionPerformed(evt);
             }
         });
 
+        jComboBox4.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" }));
         jComboBox4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -677,6 +751,7 @@ public class Librarians extends javax.swing.JFrame {
         jSeparator3.setOrientation(javax.swing.SwingConstants.VERTICAL);
         jSeparator3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        jTable3.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -696,7 +771,7 @@ public class Librarians extends javax.swing.JFrame {
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel23)
@@ -706,15 +781,15 @@ public class Librarians extends javax.swing.JFrame {
                             .addComponent(jLabel18)
                             .addComponent(jLabel19)
                             .addComponent(jLabel17))
-                        .addGap(33, 33, 33)
-                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField18, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
-                            .addComponent(jTextField46)
-                            .addComponent(jTextField19, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
-                            .addComponent(jTextField20, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
-                            .addComponent(jTextField17, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
-                            .addComponent(jTextField15, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
-                            .addComponent(jComboBox4, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField15, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBox4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField17, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField18, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField46, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField19, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField20, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(jPanel9Layout.createSequentialGroup()
@@ -722,9 +797,10 @@ public class Librarians extends javax.swing.JFrame {
                                 .addGroup(jPanel9Layout.createSequentialGroup()
                                     .addComponent(jButton11)
                                     .addGap(7, 7, 7))
-                                .addComponent(jLabel52, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel52, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanel9Layout.createSequentialGroup()
                                     .addGap(26, 26, 26)
@@ -737,7 +813,7 @@ public class Librarians extends javax.swing.JFrame {
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -777,15 +853,15 @@ public class Librarians extends javax.swing.JFrame {
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel21)
                             .addComponent(jTextField46, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(14, 14, 14)
-                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(12, 12, 12)
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel22)
-                            .addComponent(jTextField19, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jTextField19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(17, 17, 17)
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTextField20, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel23))
-                        .addGap(31, 31, 31)
+                        .addGap(26, 26, 26)
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton11)
                             .addComponent(jButton12)
@@ -793,17 +869,24 @@ public class Librarians extends javax.swing.JFrame {
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addGap(24, 24, 24)
                         .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 598, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("BOOK", jPanel9);
 
         jPanel10.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel7.setText("Category_id");
+        jLabel7.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel7.setText("Category ID:");
 
-        jLabel8.setText("Category_name");
+        jLabel8.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel8.setText("Category Name:");
 
+        jTextField6.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jTextField7.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jButton4.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
         jButton4.setText("Save");
         jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -811,6 +894,7 @@ public class Librarians extends javax.swing.JFrame {
             }
         });
 
+        jButton5.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
         jButton5.setText("Update");
         jButton5.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -818,6 +902,7 @@ public class Librarians extends javax.swing.JFrame {
             }
         });
 
+        jButton6.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
         jButton6.setText("Delete");
         jButton6.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -829,6 +914,9 @@ public class Librarians extends javax.swing.JFrame {
         jSeparator2.setForeground(new java.awt.Color(51, 51, 51));
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
+        jScrollPane3.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jTable2.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
@@ -837,7 +925,7 @@ public class Librarians extends javax.swing.JFrame {
                 {null, null}
             },
             new String [] {
-                "Category_id", "Category_name"
+                "Category ID", "Category Name"
             }
         ));
         jScrollPane3.setViewportView(jTable2);
@@ -867,7 +955,7 @@ public class Librarians extends javax.swing.JFrame {
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(364, Short.MAX_VALUE))
+                .addContainerGap(490, Short.MAX_VALUE))
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -891,39 +979,59 @@ public class Librarians extends javax.swing.JFrame {
                     .addGroup(jPanel10Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(203, Short.MAX_VALUE))
+                .addContainerGap(82, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("CATEGORY", jPanel10);
 
         jPanel11.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel38.setText("RETURN_ID");
+        jLabel38.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel38.setText("Return ID:");
 
-        jLabel39.setText("Members_id");
+        jTextField32.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
 
-        jLabel40.setText("Members name");
+        jLabel39.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel39.setText("Members ID:");
 
-        jLabel41.setText("Borrower_id");
+        jLabel40.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel40.setText("Members Name:");
+        jLabel40.setToolTipText("");
 
-        jLabel42.setText("Book_id");
+        jLabel41.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel41.setText("Borrower ID:");
 
-        jLabel43.setText("Title");
+        jLabel42.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel42.setText("Book ID:");
 
-        jLabel44.setText("Due date");
+        jLabel43.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel43.setText("Title:");
+        jLabel43.setToolTipText("");
 
-        jLabel45.setText("Return_date");
+        jLabel44.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel44.setText("Due Date:");
 
-        jLabel46.setText("Fineperday");
+        jLabel45.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel45.setText("Return  Date:");
 
-        jLabel47.setText("Total Fine");
+        jLabel46.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel46.setText("Fine per day:");
 
+        jLabel47.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel47.setText("Total Fine:");
+
+        jTextField33.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField33.setEnabled(false);
 
+        jTextField34.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField34.setEnabled(false);
 
+        jTextField35.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jTextField36.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField36.setEnabled(false);
 
+        jTextField37.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField37.setEnabled(false);
         jTextField37.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -931,8 +1039,10 @@ public class Librarians extends javax.swing.JFrame {
             }
         });
 
+        jTextField38.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField38.setEnabled(false);
 
+        jTextField39.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField39.setEnabled(false);
         jTextField39.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -940,6 +1050,11 @@ public class Librarians extends javax.swing.JFrame {
             }
         });
 
+        jTextField40.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jTextField41.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jButton18.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
         jButton18.setText("Return");
         jButton18.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -947,15 +1062,18 @@ public class Librarians extends javax.swing.JFrame {
             }
         });
 
-        jButton19.setText("SEARCH");
+        jButton19.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
+        jButton19.setText("Search");
         jButton19.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton19MouseClicked(evt);
             }
         });
 
-        jLabel48.setText("release date");
+        jLabel48.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel48.setText("Release Date:");
 
+        jTextField42.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField42.setEnabled(false);
         jTextField42.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -963,16 +1081,22 @@ public class Librarians extends javax.swing.JFrame {
             }
         });
 
-        jLabel49.setText("Copies");
+        jLabel49.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel49.setText("Copies:");
 
+        jTextField43.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField43.setEnabled(false);
 
-        jLabel50.setText("librarian id");
+        jLabel50.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel50.setText("Librarian ID:");
 
+        jTextField44.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField44.setEnabled(false);
 
-        jLabel51.setText("Librarian_name");
+        jLabel51.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        jLabel51.setText("Librarian Name:");
 
+        jTextField45.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jTextField45.setEnabled(false);
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
@@ -1004,21 +1128,19 @@ public class Librarians extends javax.swing.JFrame {
                             .addComponent(jLabel48)
                             .addComponent(jLabel49)
                             .addComponent(jLabel46, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel43)
-                            .addComponent(jLabel42)
                             .addComponent(jLabel50)
                             .addComponent(jLabel51)
                             .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jLabel39)
                                 .addComponent(jLabel41))
-                            .addComponent(jLabel40))
+                            .addComponent(jLabel40)
+                            .addComponent(jLabel42)
+                            .addComponent(jLabel43, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(34, 34, 34)
                         .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel11Layout.createSequentialGroup()
                                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(jTextField43, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField37, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField36, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jTextField38)
                                     .addComponent(jTextField42, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jTextField39)
@@ -1030,8 +1152,10 @@ public class Librarians extends javax.swing.JFrame {
                                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(jTextField45, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jTextField44, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField33, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addContainerGap(294, Short.MAX_VALUE))
+                                    .addComponent(jTextField33, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTextField36, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTextField37, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addContainerGap(402, Short.MAX_VALUE))
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1058,19 +1182,19 @@ public class Librarians extends javax.swing.JFrame {
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel50)
                     .addComponent(jTextField44, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel51)
                     .addComponent(jTextField45, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField36, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel42))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel42, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTextField36, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel43, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTextField37, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField37, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel43))
+                .addGap(21, 21, 21)
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField43, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel49))
@@ -1103,11 +1227,12 @@ public class Librarians extends javax.swing.JFrame {
         jTabbedPane2.setTabPlacement(javax.swing.JTabbedPane.LEFT);
         jTabbedPane2.setAlignmentY(2.0F);
         jTabbedPane2.setAutoscrolls(true);
+        jTabbedPane2.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
 
         jPanel12.setBackground(new java.awt.Color(255, 255, 255));
 
         jButton10.setBackground(new java.awt.Color(255, 204, 204));
-        jButton10.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
+        jButton10.setFont(new java.awt.Font("Book Antiqua", 1, 18)); // NOI18N
         jButton10.setText("PRINT");
         jButton10.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -1119,19 +1244,20 @@ public class Librarians extends javax.swing.JFrame {
         jPanel12Layout.setHorizontalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel12Layout.createSequentialGroup()
+                .addGap(40, 40, 40)
                 .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(48, 48, 48)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(416, Short.MAX_VALUE))
+                .addContainerGap(451, Short.MAX_VALUE))
         );
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel12Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
+                .addContainerGap()
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton10)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 432, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(180, Short.MAX_VALUE))
+                .addContainerGap(68, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("TRANSACTION REPORT", jPanel12);
@@ -1142,11 +1268,11 @@ public class Librarians extends javax.swing.JFrame {
         jPanel13.setLayout(jPanel13Layout);
         jPanel13Layout.setHorizontalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 949, Short.MAX_VALUE)
+            .addGap(0, 1066, Short.MAX_VALUE)
         );
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 632, Short.MAX_VALUE)
+            .addGap(0, 511, Short.MAX_VALUE)
         );
 
         jTabbedPane2.addTab("MEMBERS REPORT", jPanel13);
@@ -1157,11 +1283,11 @@ public class Librarians extends javax.swing.JFrame {
         jPanel14.setLayout(jPanel14Layout);
         jPanel14Layout.setHorizontalGroup(
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 949, Short.MAX_VALUE)
+            .addGap(0, 1066, Short.MAX_VALUE)
         );
         jPanel14Layout.setVerticalGroup(
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 632, Short.MAX_VALUE)
+            .addGap(0, 511, Short.MAX_VALUE)
         );
 
         jTabbedPane2.addTab("BOOK REPORT", jPanel14);
@@ -1172,11 +1298,11 @@ public class Librarians extends javax.swing.JFrame {
         jPanel15.setLayout(jPanel15Layout);
         jPanel15Layout.setHorizontalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 949, Short.MAX_VALUE)
+            .addGap(0, 1066, Short.MAX_VALUE)
         );
         jPanel15Layout.setVerticalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 632, Short.MAX_VALUE)
+            .addGap(0, 511, Short.MAX_VALUE)
         );
 
         jTabbedPane2.addTab("PAYMENT REPORT", jPanel15);
@@ -1196,6 +1322,10 @@ public class Librarians extends javax.swing.JFrame {
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
 
+        jComboBox1.setEditable(true);
+        jComboBox1.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+
+        jButton1.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
         jButton1.setText("Select");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1208,23 +1338,20 @@ public class Librarians extends javax.swing.JFrame {
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(151, 151, 151)
-                        .addComponent(jButton1)))
-                .addContainerGap(874, Short.MAX_VALUE))
+                .addGap(28, 28, 28)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton1)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(1013, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
+                .addGap(29, 29, 29)
                 .addComponent(jButton1)
-                .addContainerGap(541, Short.MAX_VALUE))
+                .addContainerGap(419, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("SELECT PRINTER", jPanel5);
@@ -1241,7 +1368,8 @@ public class Librarians extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
