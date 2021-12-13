@@ -13,11 +13,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import net.proteanit.sql.DbUtils;
 
 /**
  *
@@ -28,6 +32,9 @@ public class Administrator extends javax.swing.JFrame {
     /**
      * Creates new form Administrator
      */
+         Connection con = null;
+    PreparedStatement pst = null;
+    ResultSet rs = null;
     public Administrator() {
         initComponents();
     }
@@ -45,6 +52,7 @@ public class Administrator extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jButton20 = new javax.swing.JButton();
+        jLabel13 = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
@@ -92,6 +100,9 @@ public class Administrator extends javax.swing.JFrame {
 
         jButton20.setText("Logout");
 
+        jLabel13.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel13.setText("ADMIN");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -101,7 +112,9 @@ public class Administrator extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31)
                 .addComponent(jButton20)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel13)
+                .addGap(93, 93, 93))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -109,7 +122,8 @@ public class Administrator extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jButton20))
+                    .addComponent(jButton20)
+                    .addComponent(jLabel13))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -140,6 +154,11 @@ public class Administrator extends javax.swing.JFrame {
         });
 
         jButton3.setText("Save");
+        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton3MouseClicked(evt);
+            }
+        });
 
         jButton4.setText("Update");
 
@@ -412,6 +431,32 @@ public class Administrator extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField10ActionPerformed
 
+    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
+        // TODO add your handling code here:
+             // TODO add your handling code here:
+                 try{
+       String sql= "INSERT INTO `librarian`"
+               +"( `librarian_Id`, `librarian_name`, `Contact`, `Email`, `Gender`, `password`)"
+               +" VALUES (?,?,?,?,?,?)";
+         Connection con = DatabaseConnection.ConnecrDb();
+       pst=con.prepareStatement(sql);
+                pst.setString(1, jTextField6.getText());
+                pst.setString(2, jTextField7.getText());
+                pst.setString(3 ,jTextField8.getText());
+                  pst.setString(4 ,jTextField9.getText());
+                    pst.setString(5 ,jTextField10.getText());
+                      pst.setString(6 ,jTextField11.getText());
+                pst.executeUpdate();
+                JOptionPane.showMessageDialog(null, "inserted successfully ");
+                        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+     model.setRowCount(0);
+     viewTable();
+         }catch(SQLException ex){
+             JOptionPane.showMessageDialog(null, ex);
+         
+         }
+    }//GEN-LAST:event_jButton3MouseClicked
+
      public void connect() throws IOException{
      try{
                BufferedReader bufReader = new BufferedReader(new FileReader("src/config/dbconfig.txt"));
@@ -452,6 +497,19 @@ Connection conn = DriverManager.getConnection("jdbc:mysql://"+host+":"+port+"/"+
      
      
      }
+     
+        private void viewTable() {
+      
+        try{
+          Connection con = DatabaseConnection.ConnecrDb();
+String sql="SELECT * FROM `librarian`";
+pst = con.prepareStatement(sql);
+rs =pst.executeQuery();
+jTable1 .setModel(DbUtils.resultSetToTableModel(rs));
+}catch(SQLException ex){
+ JOptionPane.showMessageDialog(null, ex);
+}
+    }
     /**
      * @param args the command line arguments
      */
@@ -498,6 +556,7 @@ Connection conn = DriverManager.getConnection("jdbc:mysql://"+host+":"+port+"/"+
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
