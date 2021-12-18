@@ -1,5 +1,0 @@
-localhost
-library
-
-3306
-Library
