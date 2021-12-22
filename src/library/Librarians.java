@@ -37,11 +37,15 @@ public class Librarians extends javax.swing.JFrame {
     /**
      * Creates new form Librarians
      */
-      Connection con = null;
+    Connection con = null;
     PreparedStatement pst = null;
     ResultSet rs = null;
+
+    private String id, name, phone, email, gender, password;
+
     public Librarians() {
         initComponents();
+        setTextFields();
     }
 
     /**
@@ -1356,19 +1360,22 @@ public class Librarians extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-  
-   // public static final String  html = "<html><body><table><tr style=\"border-top:1px solid red\"><th>return_id</th><th>borrower_id</th><th>Member_id</th><th>Members name</th><th>Librarian id</th><th>librarian_name</th><th>Book id</th> <th>title</th><th>copies</th>"
-     //      + " <th>release date</th><th>due date</th><th>fine</th>"
-     //      + "<th>return date</th> <th>total fine</th></tr><tr><td> </td></tr></table></body></html>";
-    
-   
-
-
+    // public static final String  html = "<html><body><table><tr style=\"border-top:1px solid red\"><th>return_id</th><th>borrower_id</th><th>Member_id</th><th>Members name</th><th>Librarian id</th><th>librarian_name</th><th>Book id</th> <th>title</th><th>copies</th>"
+    //      + " <th>release date</th><th>due date</th><th>fine</th>"
+    //      + "<th>return date</th> <th>total fine</th></tr><tr><td> </td></tr></table></body></html>";
+    public void setTextFields() {
+        name = jTextField9.getText();
+        phone = jTextField10.getText();
+        email = jTextField11.getText();
+        gender = jTextField12.getText();
+        password = jTextField13.getText();
+        id = jTextField8.getText();
+    }
 
     private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
         // TODO add your handling code here:
-         jComboBox1.removeAllItems();
-         jComboBox1.addItem("---SELECT PRINTER---");
+        jComboBox1.removeAllItems();
+        jComboBox1.addItem("---SELECT PRINTER---");
         PrintService[] ps = PrinterJob.lookupPrintServices();
         for (int count = 0; count < ps.length; ++count) {
 
@@ -1377,8 +1384,8 @@ public class Librarians extends javax.swing.JFrame {
         combo();
         combos();
     }//GEN-LAST:event_jTabbedPane1MouseClicked
-public void Print(){
-   String print = (String) jComboBox1.getSelectedItem();
+    public void Print() {
+        String print = (String) jComboBox1.getSelectedItem();
         try {
             File file = new File("src/config/pconfig.txt");
             // if file doesnt exists, then create it
@@ -1395,16 +1402,13 @@ public void Print(){
             e.printStackTrace();
         }
 
+    }
 
 
-}
-    
-    
-  
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-     Print();   
-      
+        Print();
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
@@ -1413,48 +1417,65 @@ public void Print(){
 
     private void jButton7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton7MouseClicked
         // TODO add your handling code here:
-                 try{
-       String sql= "INSERT INTO `readers`"
-               +"( `readers_id`, `reader_Name`, `Contact`, `Email`, `Gender`, `Password`)"
-               +" VALUES (?,?,?,?,?,?)";
-         Connection con = DatabaseConnection.ConnecrDb();
-       pst=con.prepareStatement(sql);
-                pst.setString(1, jTextField8.getText());
-                pst.setString(2, jTextField9.getText());
-                pst.setString(3 ,jTextField10.getText());
-                  pst.setString(4 ,jTextField11.getText());
-                    pst.setString(5 ,jTextField12.getText());
-                      pst.setString(6 ,jTextField13.getText());
-                pst.executeUpdate();
-                JOptionPane.showMessageDialog(null, "inserted successfully ");
-                        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-     model.setRowCount(0);
-     viewTable();
-         }catch(SQLException ex){
-             JOptionPane.showMessageDialog(null, ex);
-         
-         }
+        try {
+            String sql = "INSERT INTO `readers`"
+                    + "( `readers_id`, `reader_Name`, `Contact`, `Email`, `Gender`, `Password`)"
+                    + " VALUES (?,?,?,?,?,?)";
+            Connection con = DatabaseConnection.ConnecrDb();
+            pst = con.prepareStatement(sql);
+
+            if (name == null) {
+                JOptionPane.showMessageDialog(null, "Please enter name.");
+            }
+
+            if (email == null) {
+                JOptionPane.showMessageDialog(null, "Please enter email.");
+            }
+
+            if (password == null) {
+                JOptionPane.showMessageDialog(null, "Please enter email.");
+            }
+
+            pst.setString(1, name);
+            pst.setString(2, phone);
+            pst.setString(3, email);
+            pst.setString(4, gender);
+            pst.setString(5, password);
+
+            int librarianAdded = pst.executeUpdate();
+
+            if (librarianAdded == 1) {
+                JOptionPane.showMessageDialog(null, "Librarian added successfully.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Unable to add librarian. Please try again later.");
+            }
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            model.setRowCount(0);
+            viewTable();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+
+        }
     }//GEN-LAST:event_jButton7MouseClicked
 
     private void jButton9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseClicked
         // TODO add your handling code here:
-          try{
-       
-       String sql= "DELETE FROM `readers` WHERE `readers_id`=?" ;
-          Connection con = DatabaseConnection.ConnecrDb();
-        pst=con.prepareStatement(sql);
-                pst.setString(1, jTextField8.getText());
-              
-                pst.executeUpdate();
-                JOptionPane.showMessageDialog(null, "DELETEsuccessfully ");
-                   DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-     model.setRowCount(0);
-     viewTable();
-              
-       
-       }catch(SQLException ex){
+        try {
+
+            String sql = "DELETE FROM `readers` WHERE `readers_id`=?";
+            Connection con = DatabaseConnection.ConnecrDb();
+            pst = con.prepareStatement(sql);
+            pst.setString(1, jTextField8.getText());
+
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "DELETE successfully ");
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            model.setRowCount(0);
+            viewTable();
+
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
-       }
+        }
     }//GEN-LAST:event_jButton9MouseClicked
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
@@ -1463,88 +1484,87 @@ public void Print(){
 
     private void jButton8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton8MouseClicked
         // TODO add your handling code here:
-         try{ String sql= "UPDATE `readers` SET `reader_Name`=?,`Contact`=?,`Email`=?,`Gender`=?,`Password`=?  WHERE `readers_id`=? " ;
-          
-                  Connection con = DatabaseConnection.ConnecrDb();
-       pst=con.prepareStatement(sql);
-      pst.setString(1, jTextField8.getText());
-                pst.setString(2, jTextField9.getText());
-                pst.setString(3 ,jTextField10.getText());
-                  pst.setString(4 ,jTextField11.getText());
-                    pst.setString(5 ,jTextField12.getText());
-                      pst.setString(6 ,jTextField13.getText());
-                pst.executeUpdate();
-                JOptionPane.showMessageDialog(null, "update successfully ");
-     DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-     model.setRowCount(0);
-     viewTable();
-     }
-         catch(SQLException ex){
+        try {
+            String sql = "UPDATE `readers` SET `reader_Name`=?,`Contact`=?,`Email`=?,`Gender`=?,`Password`=?  WHERE `readers_id`=? ";
+
+            Connection con = DatabaseConnection.ConnecrDb();
+            pst = con.prepareStatement(sql);
+            pst.setString(1, jTextField8.getText());
+            pst.setString(2, jTextField9.getText());
+            pst.setString(3, jTextField10.getText());
+            pst.setString(4, jTextField11.getText());
+            pst.setString(5, jTextField12.getText());
+            pst.setString(6, jTextField13.getText());
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "update successfully ");
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            model.setRowCount(0);
+            viewTable();
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
-       }
+        }
     }//GEN-LAST:event_jButton8MouseClicked
 
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
         // TODO add your handling code here:
-                    try{
-       String sql= "INSERT INTO `category`"
-               +"( `Category_id`, `Category_name`)"
-               +" VALUES (?,?)";
-         Connection con = DatabaseConnection.ConnecrDb();
-       pst=con.prepareStatement(sql);
-                pst.setString(1, jTextField6.getText());
-                pst.setString(2, jTextField7.getText());
-               
-                pst.executeUpdate();
-                JOptionPane.showMessageDialog(null, "inserted successfully ");
-                        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
-     model.setRowCount(0);
-     viewTable1();
-         }catch(SQLException ex){
-             JOptionPane.showMessageDialog(null, ex);
-         
-         }
+        try {
+            String sql = "INSERT INTO `category`"
+                    + "( `Category_id`, `Category_name`)"
+                    + " VALUES (?,?)";
+            Connection con = DatabaseConnection.ConnecrDb();
+            pst = con.prepareStatement(sql);
+            pst.setString(1, jTextField6.getText());
+            pst.setString(2, jTextField7.getText());
+
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "inserted successfully ");
+            DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+            model.setRowCount(0);
+            viewTable1();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+
+        }
     }//GEN-LAST:event_jButton4MouseClicked
 
     private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseClicked
         // TODO add your handling code here:
-         try{
-       
-       String sql= "DELETE FROM `category` WHERE`Category_id`=?" ;
-          Connection con = DatabaseConnection.ConnecrDb();
-        pst=con.prepareStatement(sql);
-                pst.setString(1, jTextField6.getText());
-              
-                pst.executeUpdate();
-                JOptionPane.showMessageDialog(null, "DELETEsuccessfully ");
-                   DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
-     model.setRowCount(0);
-     viewTable1();
-              
-       
-       }catch(SQLException ex){
+        try {
+
+            String sql = "DELETE FROM `category` WHERE`Category_id`=?";
+            Connection con = DatabaseConnection.ConnecrDb();
+            pst = con.prepareStatement(sql);
+            pst.setString(1, jTextField6.getText());
+
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "DELETEsuccessfully ");
+            DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+            model.setRowCount(0);
+            viewTable1();
+
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
-       }
+        }
     }//GEN-LAST:event_jButton6MouseClicked
 
     private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseClicked
         // TODO add your handling code here:
-          try{ String sql= "UPDATE `category` SET`Category_id`=?,`Category_name`=?,  WHERE `Category_id`=? " ;
-          
-                  Connection con = DatabaseConnection.ConnecrDb();
-       pst=con.prepareStatement(sql);
-      pst.setString(1, jTextField6.getText());
-                pst.setString(2, jTextField7.getText());
-            
-                pst.executeUpdate();
-                JOptionPane.showMessageDialog(null, "update successfully ");
-     DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
-     model.setRowCount(0);
-     viewTable1();
-     }
-         catch(SQLException ex){
+        try {
+            String sql = "UPDATE `category` SET`Category_id`=?,`Category_name`=?,  WHERE `Category_id`=? ";
+
+            Connection con = DatabaseConnection.ConnecrDb();
+            pst = con.prepareStatement(sql);
+            pst.setString(1, jTextField6.getText());
+            pst.setString(2, jTextField7.getText());
+
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "update successfully ");
+            DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+            model.setRowCount(0);
+            viewTable1();
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
-       }
+        }
     }//GEN-LAST:event_jButton5MouseClicked
 
     private void jPanel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseClicked
@@ -1563,21 +1583,20 @@ public void Print(){
         // TODO add your handling code here:
         String sql = "SELECT * FROM `book` WHERE `Book_id`=?";
         try {
-                      Connection con = DatabaseConnection.ConnecrDb();
-       pst=con.prepareStatement(sql);
+            Connection con = DatabaseConnection.ConnecrDb();
+            pst = con.prepareStatement(sql);
             pst.setString(1, jTextField22.getText());
             rs = pst.executeQuery();
             if (rs.next()) {
                 String add1 = rs.getString("Title");
                 jTextField23.setText(add1);
- 
+
                 String add2 = rs.getString("Copies");
-               jTextField24.setText(add2);
- 
+                jTextField24.setText(add2);
+
                 String add3 = rs.getString("Fineperday");
-               jTextField25.setText(add3);
- 
-              
+                jTextField25.setText(add3);
+
                 rs.close();
                 pst.close();
             } else {
@@ -1597,19 +1616,16 @@ public void Print(){
 
     private void jButton15MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton15MouseClicked
         // TODO add your handling code here:
-         String sql = "SELECT * FROM `readers` WHERE `readers_id`=?";
+        String sql = "SELECT * FROM `readers` WHERE `readers_id`=?";
         try {
-                      Connection con = DatabaseConnection.ConnecrDb();
-       pst=con.prepareStatement(sql);
+            Connection con = DatabaseConnection.ConnecrDb();
+            pst = con.prepareStatement(sql);
             pst.setString(1, jTextField26.getText());
             rs = pst.executeQuery();
             if (rs.next()) {
                 String add4 = rs.getString("reader_Name");
                 jTextField27.setText(add4);
- 
-               
- 
-              
+
                 rs.close();
                 pst.close();
             } else {
@@ -1629,19 +1645,16 @@ public void Print(){
 
     private void jButton16MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton16MouseClicked
         // TODO add your handling code here:
-           String sql = "SELECT * FROM `librarian` WHERE `librarian_Id`=?";
+        String sql = "SELECT * FROM `librarian` WHERE `librarian_Id`=?";
         try {
-                      Connection con = DatabaseConnection.ConnecrDb();
-       pst=con.prepareStatement(sql);
+            Connection con = DatabaseConnection.ConnecrDb();
+            pst = con.prepareStatement(sql);
             pst.setString(1, jTextField28.getText());
             rs = pst.executeQuery();
             if (rs.next()) {
                 String add5 = rs.getString("librarian_name");
                 jTextField29.setText(add5);
- 
-               
- 
-              
+
                 rs.close();
                 pst.close();
             } else {
@@ -1661,11 +1674,11 @@ public void Print(){
 
     private void jButton17MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton17MouseClicked
         // TODO add your handling code here:
-         String sql = "INSERT INTO `borrowers`(`Borrower_id`, `Book_id`, `Title`, `copies`, `Fineperday`, `readers_id`,"
+        String sql = "INSERT INTO `borrowers`(`Borrower_id`, `Book_id`, `Title`, `copies`, `Fineperday`, `readers_id`,"
                 + "`reader_Name`, `librarian_id`, `librarian_name`, `releasedate`, `duedate`)"
                 + "values(?,?,?,?,?,?,?,?,?,?,?)";
         try {
-               Connection con = DatabaseConnection.ConnecrDb();
+            Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
             pst.setString(1, jTextField21.getText());
             pst.setString(2, jTextField22.getText());
@@ -1678,7 +1691,7 @@ public void Print(){
             pst.setString(9, jTextField29.getText());
             pst.setString(10, jTextField30.getText());
             pst.setString(11, jTextField31.getText());
-           
+
             pst.execute();
             JOptionPane.showMessageDialog(null, "Book issued");
             update();
@@ -1706,33 +1719,32 @@ public void Print(){
         // TODO add your handling code here:
         String sql = "SELECT * FROM `borrowers` WHERE `Borrower_id`=?";
         try {
-                      Connection con = DatabaseConnection.ConnecrDb();
-       pst=con.prepareStatement(sql);
+            Connection con = DatabaseConnection.ConnecrDb();
+            pst = con.prepareStatement(sql);
             pst.setString(1, jTextField35.getText());
             rs = pst.executeQuery();
             if (rs.next()) {
-                  String add6= rs.getString("readers_id");
-               jTextField33.setText(add6);
-               
+                String add6 = rs.getString("readers_id");
+                jTextField33.setText(add6);
+
                 String add7 = rs.getString("reader_Name");
                 jTextField34.setText(add7);
-                
+
                 String add8 = rs.getString("Book_id");
-               jTextField36.setText(add8);
-               
-                 String add9 = rs.getString("Title");
-               jTextField37.setText(add9);
-               
+                jTextField36.setText(add8);
+
+                String add9 = rs.getString("Title");
+                jTextField37.setText(add9);
+
                 String add12 = rs.getString("releasedate");
-               jTextField42.setText(add12);
-               
-                 String add10 = rs.getString("duedate");
-               jTextField38.setText(add10);
-               
-                 String add11 = rs.getString("Fineperday");
-               jTextField39.setText(add11);
- 
-              
+                jTextField42.setText(add12);
+
+                String add10 = rs.getString("duedate");
+                jTextField38.setText(add10);
+
+                String add11 = rs.getString("Fineperday");
+                jTextField39.setText(add11);
+
                 rs.close();
                 pst.close();
             } else {
@@ -1752,7 +1764,7 @@ public void Print(){
 
     private void jButton18MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton18MouseClicked
         // TODO add your handling code here:
-       returnUpdate();
+        returnUpdate();
         delete();
     }//GEN-LAST:event_jButton18MouseClicked
 
@@ -1767,50 +1779,50 @@ public void Print(){
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         // TODO add your handling code here:
         Book();
-                      DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
-     model.setRowCount(0);
-          try {
-              retrieve();
-          } catch (ClassNotFoundException ex) {
-              Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
-          } catch (InstantiationException ex) {
-              Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
-          } catch (IllegalAccessException ex) {
-              Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
-          } catch (NoSuchMethodException ex) {
-              Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
-          } catch (IllegalArgumentException ex) {
-              Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
-          } catch (InvocationTargetException ex) {
-              Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
-          }
+        DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+        model.setRowCount(0);
+        try {
+            retrieve();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchMethodException ex) {
+            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvocationTargetException ex) {
+            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton2MouseClicked
 
     private void jButton12MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton12MouseClicked
-          try {
-              // TODO add your handling code here:
-              retrieve();
-          } catch (ClassNotFoundException ex) {
-              Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
-          } catch (InstantiationException ex) {
-              Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
-          } catch (IllegalAccessException ex) {
-              Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
-          } catch (NoSuchMethodException ex) {
-              Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
-          } catch (IllegalArgumentException ex) {
-              Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
-          } catch (InvocationTargetException ex) {
-              Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
-          }
+        try {
+            // TODO add your handling code here:
+            retrieve();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchMethodException ex) {
+            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvocationTargetException ex) {
+            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton12MouseClicked
-     
-    public void returnUpdate(){
-      String sql = "INSERT INTO `return`(`return_id`, `Borrower_id`, `readers_id`, `reader_Name`, `Book_id`,"
+
+    public void returnUpdate() {
+        String sql = "INSERT INTO `return`(`return_id`, `Borrower_id`, `readers_id`, `reader_Name`, `Book_id`,"
                 + "`Title`, `Duedate`, `Releasedate`, `Returndate`, `Fineperday`, `TotalFIne`)"
                 + "values(?,?,?,?,?,?,?,?,?,?,?)";
         try {
-               Connection con = DatabaseConnection.ConnecrDb();
+            Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
             pst.setString(1, jTextField32.getText());
             pst.setString(2, jTextField33.getText());
@@ -1823,7 +1835,7 @@ public void Print(){
             pst.setString(9, jTextField39.getText());
             pst.setString(10, jTextField40.getText());
             pst.setString(11, jTextField41.getText());
-           
+
             pst.execute();
             JOptionPane.showMessageDialog(null, "Book return");
             update1();
@@ -1837,139 +1849,144 @@ public void Print(){
                 JOptionPane.showMessageDialog(null, e);
             }
         }
-    
+
     }
-     public void combo(){
 
-      try {
-         Connection con = DatabaseConnection.ConnecrDb();
-         String sql="SELECT * FROM `category`";
-       pst = con.prepareStatement(sql);
+    public void combo() {
 
-       rs =pst.executeQuery();
- jComboBox2.removeAllItems();
-while(rs.next()){
+        try {
+            Connection con = DatabaseConnection.ConnecrDb();
+            String sql = "SELECT * FROM `category`";
+            pst = con.prepareStatement(sql);
 
- 
-jComboBox2.addItem(rs.getString(1));
-}
-}catch(SQLException e) {
-JOptionPane.showMessageDialog(this, e.getMessage());
-}
-    
-    }
-     public void combos(){
+            rs = pst.executeQuery();
+            jComboBox2.removeAllItems();
+            while (rs.next()) {
 
-      try {
-         Connection con = DatabaseConnection.ConnecrDb();
-         String sql="SELECT * FROM `category`";
-       pst = con.prepareStatement(sql);
-
-       rs =pst.executeQuery();
- jComboBox3.removeAllItems();
-while(rs.next()){
-
- 
-jComboBox3.addItem(rs.getString(2));
-}
-}catch(SQLException e) {
-JOptionPane.showMessageDialog(this, e.getMessage());
-}
-    
-    } 
-    public void delete(){
-        String sql = "DELETE FROM `borrowers` WHERE `readers_id`=?";
-            try {
-                 Connection con = DatabaseConnection.ConnecrDb();
-                pst = con.prepareStatement(sql);
-                pst.setString(1, jTextField33.getText());
-                pst.execute();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e);
+                jComboBox2.addItem(rs.getString(1));
             }
-}
-       public void update1(){
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+
+    }
+
+    public void combos() {
+
+        try {
+            Connection con = DatabaseConnection.ConnecrDb();
+            String sql = "SELECT * FROM `category`";
+            pst = con.prepareStatement(sql);
+
+            rs = pst.executeQuery();
+            jComboBox3.removeAllItems();
+            while (rs.next()) {
+
+                jComboBox3.addItem(rs.getString(2));
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+
+    }
+
+    public void delete() {
+        String sql = "DELETE FROM `borrowers` WHERE `readers_id`=?";
+        try {
+            Connection con = DatabaseConnection.ConnecrDb();
+            pst = con.prepareStatement(sql);
+            pst.setString(1, jTextField33.getText());
+            pst.execute();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    public void update1() {
         int st = Integer.parseInt(jTextField43.getText());
         int q = 1;
         int sup = st + q;
         String s = String.valueOf(sup);
-       jTextField43.setText(s);
+        jTextField43.setText(s);
         try {
-               Connection con = DatabaseConnection.ConnecrDb();
-            String val1= jTextField36.getText();
+            Connection con = DatabaseConnection.ConnecrDb();
+            String val1 = jTextField36.getText();
             String val2 = jTextField43.getText();
-    String sql = "update book set Book_id='"+val1+"', "
-                    + "Copies='"+val2+"' where Book_id='"+val1+"'";
+            String sql = "update book set Book_id='" + val1 + "', "
+                    + "Copies='" + val2 + "' where Book_id='" + val1 + "'";
             pst = con.prepareStatement(sql);
             pst.executeUpdate();
             JOptionPane.showMessageDialog(null, "Record Updated");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
-        }finally{
+        } finally {
             try {
                 rs.close();
                 pst.close();
             } catch (Exception e) {
-                  JOptionPane.showMessageDialog(null, e);
+                JOptionPane.showMessageDialog(null, e);
             }
-        }}
-    public void update(){
+        }
+    }
+
+    public void update() {
         int st = Integer.parseInt(jTextField24.getText());
         int q = 1;
         int sup = st - q;
         String s = String.valueOf(sup);
-    jTextField24.setText(s);
+        jTextField24.setText(s);
         try {
-               Connection con = DatabaseConnection.ConnecrDb();
+            Connection con = DatabaseConnection.ConnecrDb();
             int n = Integer.parseInt(s);
-            if(n==0 ){
-            String val1= jTextField22.getText();
-            String val2 = jTextField24.getText();
-            String sql = "update book set Book_id='"+val1+"', "
-                    + "Copies='"+val2+"' where Book_id='"+val1+"'";
-            pst = con.prepareStatement(sql);
-            pst.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Record Updated");
-            }else{
+            if (n == 0) {
+                String val1 = jTextField22.getText();
+                String val2 = jTextField24.getText();
+                String sql = "update book set Book_id='" + val1 + "', "
+                        + "Copies='" + val2 + "' where Book_id='" + val1 + "'";
+                pst = con.prepareStatement(sql);
+                pst.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Record Updated");
+            } else {
                 JOptionPane.showMessageDialog(null, "Book is not issued");
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
-        }finally{
+        } finally {
             try {
                 rs.close();
                 pst.close();
             } catch (Exception e) {
-                  JOptionPane.showMessageDialog(null, e);
+                JOptionPane.showMessageDialog(null, e);
             }
-        }}
-  
-    public void Book(){
-        
-    try {
+        }
+    }
+
+    public void Book() {
+
+        try {
             String sql = "INSERT INTO `book`"
-                    +"(`Book_id`, `Category_id`, `Category_name`, `Title`, `Edition`, `Author`, `Publisher`,`Copies`, `Fineperday`, `Remarks`) "
+                    + "(`Book_id`, `Category_id`, `Category_name`, `Title`, `Edition`, `Author`, `Publisher`,`Copies`, `Fineperday`, `Remarks`) "
                     + "values (?,?,?,?,?,?,?,?,?,?)";
-             Connection con = DatabaseConnection.ConnecrDb();
+            Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
             pst.setString(1, jTextField1.getText());
-                String cat_id;
-           cat_id = jComboBox2.getSelectedItem().toString();
-            pst.setString(2,cat_id);
-               String catname;
-            catname= jComboBox3.getSelectedItem().toString();
+            String cat_id;
+            cat_id = jComboBox2.getSelectedItem().toString();
+            pst.setString(2, cat_id);
+            String catname;
+            catname = jComboBox3.getSelectedItem().toString();
             pst.setString(3, catname);
-                
-                     pst.setString(4, jTextField4.getText());
-                         String values ;
-                    values= jComboBox4.getSelectedItem().toString();
+
+            pst.setString(4, jTextField4.getText());
+            String values;
+            values = jComboBox4.getSelectedItem().toString();
             pst.setString(5, values);
-                           pst.setString(6, jTextField16.getText());
-                              pst.setString(7, jTextField47.getText());
-                                 pst.setString(8, jTextField48.getText());
-                                    pst.setString(9, jTextField49.getText());
-                                     pst.setString(10, jTextField14.getText());
-            
+            pst.setString(6, jTextField16.getText());
+            pst.setString(7, jTextField47.getText());
+            pst.setString(8, jTextField48.getText());
+            pst.setString(9, jTextField49.getText());
+            pst.setString(10, jTextField14.getText());
+
             pst.execute();
             JOptionPane.showMessageDialog(null, "New book added");
 //            rs.close();
@@ -1978,17 +1995,11 @@ JOptionPane.showMessageDialog(this, e.getMessage());
             JOptionPane.showMessageDialog(null, e);
         }
 
-    
-    
-    
-    
-    } 
-    
-    
-    
-    public void connect() throws IOException{
-     try{
-               BufferedReader bufReader = new BufferedReader(new FileReader("src/config/dbconfig.txt"));
+    }
+
+    public void connect() throws IOException {
+        try {
+            BufferedReader bufReader = new BufferedReader(new FileReader("src/config/dbconfig.txt"));
             ArrayList<String> listOfLines = new ArrayList<>();
             String line = bufReader.readLine();
 
@@ -2004,62 +2015,60 @@ JOptionPane.showMessageDialog(this, e.getMessage());
             System.out.println(listOfLines.get(3));
             System.out.println(listOfLines.get(4));
             bufReader.close();
-            
-                Class.forName("com.mysql.jdbc.Driver");
-            
-            String host=listOfLines.get(0);
-            String db=listOfLines.get(1);
-            String pass=listOfLines.get(2);
-            String port=listOfLines.get(3);
-            String username=listOfLines.get(4);
-            
-Connection conn = DriverManager.getConnection("jdbc:mysql://"+host+":"+port+"/"+db,username,pass); 
-     
-     }
-     
-     catch(SQLException ex){
-             JOptionPane.showMessageDialog(null, ex);
-         
-         } catch (ClassNotFoundException ex) {
-              Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
-          }
-     
-     
-     }
-    
-    
+
+            Class.forName("com.mysql.jdbc.Driver");
+
+            String host = listOfLines.get(0);
+            String db = listOfLines.get(1);
+            String pass = listOfLines.get(2);
+            String port = listOfLines.get(3);
+            String username = listOfLines.get(4);
+
+            Connection conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + db, username, pass);
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
     private void viewTable() {
-      
-        try{
-          Connection con = DatabaseConnection.ConnecrDb();
-String sql="SELECT * FROM `readers`";
-pst = con.prepareStatement(sql);
-rs =pst.executeQuery();
-jTable1 .setModel(DbUtils.resultSetToTableModel(rs));
-}catch(SQLException ex){
- JOptionPane.showMessageDialog(null, ex);
-}
+
+        try {
+            Connection con = DatabaseConnection.ConnecrDb();
+            String sql = "SELECT * FROM `readers`";
+            pst = con.prepareStatement(sql);
+            rs = pst.executeQuery();
+            jTable1.setModel(DbUtils.resultSetToTableModel(rs));
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
     }
-    private void retrieve() throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException{
-  BookFactory b = new BookFactory();
-  BookView f = b.getBookView();
-  f.retrieveBook();
-      jTable3 .setModel(DbUtils.resultSetToTableModel(rs));
-    
-    
+
+    private void retrieve() throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException {
+        BookFactory b = new BookFactory();
+        BookView f = b.getBookView();
+        f.retrieveBook();
+        jTable3.setModel(DbUtils.resultSetToTableModel(rs));
+
     }
-        private void viewTable1() {
-      
-        try{
-          Connection con = DatabaseConnection.ConnecrDb();
-String sql="SELECT * FROM `category`";
-pst = con.prepareStatement(sql);
-rs =pst.executeQuery();
-jTable2 .setModel(DbUtils.resultSetToTableModel(rs));
-}catch(SQLException ex){
- JOptionPane.showMessageDialog(null, ex);
-}
+
+    private void viewTable1() {
+
+        try {
+            Connection con = DatabaseConnection.ConnecrDb();
+            String sql = "SELECT * FROM `category`";
+            pst = con.prepareStatement(sql);
+            rs = pst.executeQuery();
+            jTable2.setModel(DbUtils.resultSetToTableModel(rs));
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
     }
+
     /**
      * @param args the command line arguments
      */
@@ -2093,7 +2102,7 @@ jTable2 .setModel(DbUtils.resultSetToTableModel(rs));
                 new Librarians().setVisible(true);
             }
         });
-  
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
