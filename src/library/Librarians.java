@@ -46,6 +46,7 @@ public class Librarians extends javax.swing.JFrame {
     public Librarians() {
         initComponents();
         setTextFields();
+        displayCategoriesTable();
     }
 
     /**
@@ -654,6 +655,7 @@ public class Librarians extends javax.swing.JFrame {
         categoryIdTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
 
         categoryNameTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        categoryNameTextField.setToolTipText("Enter category name");
 
         saveCategoryButton.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
         saveCategoryButton.setText("Save");
@@ -712,17 +714,17 @@ public class Librarians extends javax.swing.JFrame {
                         .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(categoryIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(categoryNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addComponent(saveCategoryButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(updateCategoryButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(deleteCategoryButton)))
+                    .addComponent(saveCategoryButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(607, Short.MAX_VALUE))
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel10Layout.createSequentialGroup()
+                        .addComponent(updateCategoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(deleteCategoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(607, 607, 607))
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -739,14 +741,15 @@ public class Librarians extends javax.swing.JFrame {
                             .addComponent(jLabel8)
                             .addComponent(categoryNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(38, 38, 38)
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(saveCategoryButton)
-                            .addComponent(updateCategoryButton)
-                            .addComponent(deleteCategoryButton)))
+                        .addComponent(saveCategoryButton))
                     .addGroup(jPanel10Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(202, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(deleteCategoryButton)
+                    .addComponent(updateCategoryButton))
+                .addContainerGap(159, Short.MAX_VALUE))
         );
 
         borrowBookTabbedPane.addTab("CATEGORY", jPanel10);
@@ -1482,21 +1485,30 @@ public class Librarians extends javax.swing.JFrame {
     }//GEN-LAST:event_updateMemberButtonMouseClicked
 
     private void saveCategoryButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveCategoryButtonMouseClicked
-        // TODO add your handling code here:
+
         try {
             String sql = "INSERT INTO `category`"
-                    + "( `Category_id`, `Category_name`)"
-                    + " VALUES (?,?)";
+                    + "(`Category_name`)"
+                    + " VALUES (?)";
             Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
-            pst.setString(1, categoryIdTextField.getText());
-            pst.setString(2, categoryNameTextField.getText());
 
-            pst.executeUpdate();
-            JOptionPane.showMessageDialog(null, "inserted successfully ");
+            String categoryName = categoryNameTextField.getText();
+            if (categoryName == null) {
+                JOptionPane.showMessageDialog(null, "Please enter a category name");
+            }
+            pst.setString(1, categoryName);
+
+            int addCategory = pst.executeUpdate();
+            if (addCategory == 1) {
+                JOptionPane.showMessageDialog(null, "Category added successfully.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Unable to add category please try again later.");
+            }
+
             DefaultTableModel model = (DefaultTableModel) categoriesTable.getModel();
             model.setRowCount(0);
-            viewTable1();
+            displayCategoriesTable();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
 
@@ -1507,16 +1519,26 @@ public class Librarians extends javax.swing.JFrame {
         // TODO add your handling code here:
         try {
 
-            String sql = "DELETE FROM `category` WHERE`Category_id`=?";
-            Connection con = DatabaseConnection.ConnecrDb();
-            pst = con.prepareStatement(sql);
-            pst.setString(1, categoryIdTextField.getText());
-
-            pst.executeUpdate();
-            JOptionPane.showMessageDialog(null, "DELETEsuccessfully ");
+            int deleteCount = 0; // Number of deleted categories
+            
             DefaultTableModel model = (DefaultTableModel) categoriesTable.getModel();
-            model.setRowCount(0);
-            viewTable1();
+            int[] rows = categoriesTable.getSelectedRows();
+            for (int i = 0; i < rows.length; i++) {
+                //model.removeRow(rows[i] - i);
+                
+                String sql = "DELETE FROM `category` WHERE`Category_id`=?";
+                Connection con = DatabaseConnection.ConnecrDb();
+                pst = con.prepareStatement(sql);
+                String categoryId = String.valueOf(model.getValueAt(rows[i] - i, 0)); // Get the selected category ID
+                pst.setString(1, categoryId);
+                int deletedCategory = pst.executeUpdate();
+                if(deletedCategory == 1) {
+                    deleteCount++;
+                }
+            }
+            String deletedMsg = deleteCount + " categories deleted";
+            JOptionPane.showMessageDialog(null, deletedMsg);
+            displayCategoriesTable();
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
@@ -1526,7 +1548,7 @@ public class Librarians extends javax.swing.JFrame {
     private void updateCategoryButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateCategoryButtonMouseClicked
         // TODO add your handling code here:
         try {
-            String sql = "UPDATE `category` SET`Category_id`=?,`Category_name`=?,  WHERE `Category_id`=? ";
+            String sql = "UPDATE `category` SET `Category_name`=?,  WHERE `Category_id`=? ";
 
             Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
@@ -1537,7 +1559,7 @@ public class Librarians extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "update successfully ");
             DefaultTableModel model = (DefaultTableModel) categoriesTable.getModel();
             model.setRowCount(0);
-            viewTable1();
+            displayCategoriesTable();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
@@ -2013,7 +2035,7 @@ public class Librarians extends javax.swing.JFrame {
 
     }
 
-    private void viewTable1() {
+    private void displayCategoriesTable() {
 
         try {
             Connection con = DatabaseConnection.ConnecrDb();
@@ -2022,7 +2044,8 @@ public class Librarians extends javax.swing.JFrame {
             rs = pst.executeQuery();
             categoriesTable.setModel(DbUtils.resultSetToTableModel(rs));
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "An error occurred while rretrieving categories.");
         }
     }
 
