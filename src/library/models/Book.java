@@ -2,9 +2,9 @@ package library.models;
 
 public class Book {
     
-    private int id;
+    private Integer id;
     
-    private int categoryId;
+    private Integer categoryId;
     
     private String title;
     
@@ -14,9 +14,9 @@ public class Book {
     
     private String publisher;
     
-    private int copies;
+    private Integer copies;
     
-    private int finePerDay;
+    private Integer finePerDay;
     
     private String remarks;
 
@@ -24,15 +24,15 @@ public class Book {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getCategoryId() {
+    public Integer getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(int categoryId) {
+    public void setCategoryId(Integer categoryId) {
         this.categoryId = categoryId;
     }
 
@@ -68,19 +68,19 @@ public class Book {
         this.publisher = publisher;
     }
 
-    public int getCopies() {
+    public Integer getCopies() {
         return copies;
     }
 
-    public void setCopies(int copies) {
+    public void setCopies(Integer copies) {
         this.copies = copies;
     }
 
-    public int getFinePerDay() {
+    public Integer getFinePerDay() {
         return finePerDay;
     }
 
-    public void setFinePerDay(int finePerDay) {
+    public void setFinePerDay(Integer finePerDay) {
         this.finePerDay = finePerDay;
     }
 

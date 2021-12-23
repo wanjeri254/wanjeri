@@ -5,6 +5,7 @@
  */
 package library;
 
+import java.awt.image.BufferedImage;
 import java.awt.print.PrinterJob;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,6 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -22,10 +24,20 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import static javax.management.Query.gt;
 import javax.print.PrintService;
+import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import library.models.Book;
+import library.models.Category;
+import library.renderer.CategoryListCellRenderer;
 import net.proteanit.sql.DbUtils;
 
 /**
@@ -43,10 +55,18 @@ public class Librarians extends javax.swing.JFrame {
 
     private String id, name, phone, email, gender, password;
 
+    private Category category;
+    private Category selectedBookCategory;
+    
+    private Book book;
+
     public Librarians() {
         initComponents();
         setTextFields();
         displayCategoriesTable();
+        setCategoriesTableListener();
+        displayBooksTable();
+        setBooksTableListener();
     }
 
     /**
@@ -112,9 +132,7 @@ public class Librarians extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         membersTable = new javax.swing.JTable();
         jPanel10 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        categoryIdTextField = new javax.swing.JTextField();
         categoryNameTextField = new javax.swing.JTextField();
         saveCategoryButton = new javax.swing.JButton();
         updateCategoryButton = new javax.swing.JButton();
@@ -165,8 +183,6 @@ public class Librarians extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -175,7 +191,6 @@ public class Librarians extends javax.swing.JFrame {
         jLabel55 = new javax.swing.JLabel();
         jLabel56 = new javax.swing.JLabel();
         jLabel57 = new javax.swing.JLabel();
-        bookIdTextField = new javax.swing.JTextField();
         bookTitleTextField = new javax.swing.JTextField();
         bookAuthorTextField = new javax.swing.JTextField();
         bookPublisherTextField = new javax.swing.JTextField();
@@ -188,7 +203,6 @@ public class Librarians extends javax.swing.JFrame {
         saveBookButton = new javax.swing.JButton();
         updateBookButton = new javax.swing.JButton();
         deleteBookButton = new javax.swing.JButton();
-        bookCategoryIdComboBox = new javax.swing.JComboBox<>();
         bookCategoryNameComboBox = new javax.swing.JComboBox<>();
         bookEditionComboBox = new javax.swing.JComboBox<>();
 
@@ -646,13 +660,8 @@ public class Librarians extends javax.swing.JFrame {
 
         jPanel10.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel7.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel7.setText("Category ID:");
-
         jLabel8.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
         jLabel8.setText("Category Name:");
-
-        categoryIdTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
 
         categoryNameTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         categoryNameTextField.setToolTipText("Enter category name");
@@ -707,13 +716,9 @@ public class Librarians extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jLabel8)
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(categoryIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(categoryNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(categoryNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(saveCategoryButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -732,11 +737,7 @@ public class Librarians extends javax.swing.JFrame {
             .addGroup(jPanel10Layout.createSequentialGroup()
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7)
-                            .addComponent(categoryIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(21, 21, 21)
+                        .addGap(76, 76, 76)
                         .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
                             .addComponent(categoryNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1117,12 +1118,6 @@ public class Librarians extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel2.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel2.setText("ID:");
-
-        jLabel3.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel3.setText("Category ID:");
-
         jLabel4.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
         jLabel4.setText("Category Name:");
 
@@ -1142,12 +1137,10 @@ public class Librarians extends javax.swing.JFrame {
         jLabel55.setText("Copies:");
 
         jLabel56.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel56.setText("Fine:");
+        jLabel56.setText("Fine per day:");
 
         jLabel57.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
         jLabel57.setText("Remarks");
-
-        bookIdTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
 
         bookTitleTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
 
@@ -1171,13 +1164,13 @@ public class Librarians extends javax.swing.JFrame {
         booksTable.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         booksTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "Category", "Title", "Edition", "Author", "Publisher", "Available Copies", "Fine Per Day", "Remarks"
             }
         ));
         jScrollPane1.setViewportView(booksTable);
@@ -1192,12 +1185,20 @@ public class Librarians extends javax.swing.JFrame {
 
         updateBookButton.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
         updateBookButton.setText("Update");
+        updateBookButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                updateBookButtonMouseClicked(evt);
+            }
+        });
 
         deleteBookButton.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
         deleteBookButton.setText("Delete");
         deleteBookButton.setToolTipText("");
-
-        bookCategoryIdComboBox.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        deleteBookButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                deleteBookButtonMouseClicked(evt);
+            }
+        });
 
         bookCategoryNameComboBox.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
 
@@ -1209,19 +1210,11 @@ public class Librarians extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(saveBookButton)
-                        .addGap(47, 47, 47)
-                        .addComponent(updateBookButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
-                        .addComponent(deleteBookButton))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel53, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1231,21 +1224,27 @@ public class Librarians extends javax.swing.JFrame {
                             .addComponent(jLabel57, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(44, 44, 44)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(bookIdTextField)
                             .addComponent(bookAuthorTextField)
                             .addComponent(bookPublisherTextField)
                             .addComponent(bookCopiesTextField)
                             .addComponent(bookFineTextField)
                             .addComponent(bookRemarkTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
-                            .addComponent(bookCategoryIdComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(bookCategoryNameComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(bookTitleTextField)
-                            .addComponent(bookEditionComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(bookEditionComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(saveBookButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(46, 46, 46)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(466, Short.MAX_VALUE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 687, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(updateBookButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(deleteBookButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(231, 231, 231))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1253,15 +1252,10 @@ public class Librarians extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(bookIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(bookCategoryIdComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                        .addGap(20, 20, 20)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
                             .addComponent(bookCategoryNameComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1292,16 +1286,14 @@ public class Librarians extends javax.swing.JFrame {
                         .addGap(28, 28, 28)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel57)
-                            .addComponent(bookRemarkTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(34, 34, 34)
+                            .addComponent(bookRemarkTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(59, 59, 59)
+                        .addComponent(saveBookButton)))
+                .addGap(28, 28, 28)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(saveBookButton)
                     .addComponent(updateBookButton)
                     .addComponent(deleteBookButton))
-                .addContainerGap(134, Short.MAX_VALUE))
+                .addContainerGap(140, Short.MAX_VALUE))
         );
 
         borrowBookTabbedPane.addTab("BOOK", jPanel3);
@@ -1360,8 +1352,7 @@ public class Librarians extends javax.swing.JFrame {
 
             jComboBox1.addItem(ps[count].getName());
         }
-        combo();
-        combos();
+        setBookCategoryComboBox();
     }//GEN-LAST:event_borrowBookTabbedPaneMouseClicked
     public void Print() {
         String print = (String) jComboBox1.getSelectedItem();
@@ -1520,19 +1511,19 @@ public class Librarians extends javax.swing.JFrame {
         try {
 
             int deleteCount = 0; // Number of deleted categories
-            
+
             DefaultTableModel model = (DefaultTableModel) categoriesTable.getModel();
             int[] rows = categoriesTable.getSelectedRows();
             for (int i = 0; i < rows.length; i++) {
                 //model.removeRow(rows[i] - i);
-                
+
                 String sql = "DELETE FROM `category` WHERE`Category_id`=?";
                 Connection con = DatabaseConnection.ConnecrDb();
                 pst = con.prepareStatement(sql);
                 String categoryId = String.valueOf(model.getValueAt(rows[i] - i, 0)); // Get the selected category ID
                 pst.setString(1, categoryId);
                 int deletedCategory = pst.executeUpdate();
-                if(deletedCategory == 1) {
+                if (deletedCategory == 1) {
                     deleteCount++;
                 }
             }
@@ -1546,22 +1537,28 @@ public class Librarians extends javax.swing.JFrame {
     }//GEN-LAST:event_deleteCategoryButtonMouseClicked
 
     private void updateCategoryButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateCategoryButtonMouseClicked
-        // TODO add your handling code here:
+
         try {
-            String sql = "UPDATE `category` SET `Category_name`=?,  WHERE `Category_id`=? ";
+            String sql = "UPDATE `category` SET `Category_name`=? WHERE `Category_id`=? ";
 
             Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
-            pst.setString(1, categoryIdTextField.getText());
-            pst.setString(2, categoryNameTextField.getText());
+            pst.setString(1, categoryNameTextField.getText());
+            pst.setString(2, String.valueOf(category.getId()));
 
-            pst.executeUpdate();
-            JOptionPane.showMessageDialog(null, "update successfully ");
+            int updatedCategory = pst.executeUpdate();
+            if (updatedCategory == 1) {
+                JOptionPane.showMessageDialog(null, "Category updated successfully.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Unable to update category.");
+            }
+
             DefaultTableModel model = (DefaultTableModel) categoriesTable.getModel();
             model.setRowCount(0);
             displayCategoriesTable();
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "An error occured. Please try again later.");
         }
     }//GEN-LAST:event_updateCategoryButtonMouseClicked
 
@@ -1775,26 +1772,71 @@ public class Librarians extends javax.swing.JFrame {
     }//GEN-LAST:event_bookFineTextFieldActionPerformed
 
     private void saveBookButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveBookButtonMouseClicked
-        // TODO add your handling code here:
-        Book();
-        DefaultTableModel model = (DefaultTableModel) booksTable.getModel();
-        model.setRowCount(0);
-        try {
-            retrieve();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchMethodException ex) {
-            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvocationTargetException ex) {
-            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        saveBookDetails();
+        displayBooksTable();
     }//GEN-LAST:event_saveBookButtonMouseClicked
+
+    private void updateBookButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateBookButtonMouseClicked
+        try {
+            String sql = "UPDATE `book` SET `Category_id`=?, `Title`=?, `Edition`=?,`Author`=?, `Publisher`=?, `Copies`=?, `Fineperday`=?, `Remarks`=? WHERE `Category_id`=? ";
+
+            Connection con = DatabaseConnection.ConnecrDb();
+            pst = con.prepareStatement(sql);
+            
+            Category category = (Category) bookCategoryNameComboBox.getSelectedItem();
+            pst.setString(1, category.getId().toString());
+            pst.setString(2, bookTitleTextField.getText());
+            pst.setString(3, bookEditionComboBox.getSelectedItem().toString());
+            pst.setString(4, bookAuthorTextField.getText());
+            pst.setString(5, bookPublisherTextField.getText());
+            pst.setString(6, bookCopiesTextField.getText());
+            pst.setString(7, bookFineTextField.getText());
+            pst.setString(8, bookRemarkTextField.getText());
+
+            int updatedCategory = pst.executeUpdate();
+            if (updatedCategory == 1) {
+                JOptionPane.showMessageDialog(null, "Category updated successfully.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Unable to update category.");
+            }
+
+            DefaultTableModel model = (DefaultTableModel) categoriesTable.getModel();
+            model.setRowCount(0);
+            displayCategoriesTable();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "An error occured. Please try again later.");
+        }
+    }//GEN-LAST:event_updateBookButtonMouseClicked
+
+    private void deleteBookButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteBookButtonMouseClicked
+        try {
+
+            int deleteCount = 0; // Number of deleted categories
+
+            DefaultTableModel model = (DefaultTableModel) booksTable.getModel();
+            int[] rows = booksTable.getSelectedRows();
+            for (int i = 0; i < rows.length; i++) {
+
+                String sql = "DELETE FROM `book` WHERE`Book_id`=?";
+                Connection con = DatabaseConnection.ConnecrDb();
+                pst = con.prepareStatement(sql);
+                String bookId = String.valueOf(model.getValueAt(rows[i] - i, 0)); // Get the selected book ID
+                pst.setString(1, bookId);
+                int deletedCategory = pst.executeUpdate();
+                if (deletedCategory == 1) {
+                    deleteCount++;
+                }
+            }
+            String deletedMsg = deleteCount + " book(s) deleted";
+            JOptionPane.showMessageDialog(null, deletedMsg);
+            displayCategoriesTable();
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }//GEN-LAST:event_deleteBookButtonMouseClicked
 
     public void returnUpdate() {
         String sql = "INSERT INTO `return`(`return_id`, `Borrower_id`, `readers_id`, `reader_Name`, `Book_id`,"
@@ -1831,26 +1873,7 @@ public class Librarians extends javax.swing.JFrame {
 
     }
 
-    public void combo() {
-
-        try {
-            Connection con = DatabaseConnection.ConnecrDb();
-            String sql = "SELECT * FROM `category`";
-            pst = con.prepareStatement(sql);
-
-            rs = pst.executeQuery();
-            bookCategoryIdComboBox.removeAllItems();
-            while (rs.next()) {
-
-                bookCategoryIdComboBox.addItem(rs.getString(1));
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-        }
-
-    }
-
-    public void combos() {
+    public void setBookCategoryComboBox() {
 
         try {
             Connection con = DatabaseConnection.ConnecrDb();
@@ -1860,8 +1883,12 @@ public class Librarians extends javax.swing.JFrame {
             rs = pst.executeQuery();
             bookCategoryNameComboBox.removeAllItems();
             while (rs.next()) {
-
-                bookCategoryNameComboBox.addItem(rs.getString(2));
+                Category category = new Category();
+                category.setId(Integer.valueOf(rs.getString(1)));
+                category.setName(rs.getString(2));
+                
+                bookCategoryNameComboBox.addItem(category);
+                bookCategoryNameComboBox.setRenderer(new CategoryListCellRenderer());
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
@@ -1940,38 +1967,53 @@ public class Librarians extends javax.swing.JFrame {
         }
     }
 
-    public void Book() {
+    public void saveBookDetails() {
 
+        String title, edition, author, publisher;
+        if(bookTitleTextField.getText() == null) {
+            JOptionPane.showMessageDialog(null, "Please enter book title");
+        }
+        
+        if(bookAuthorTextField.getText() == null) {
+            JOptionPane.showMessageDialog(null, "Please enter book author");
+        }
+        
+        if(bookPublisherTextField.getText() == null) {
+            JOptionPane.showMessageDialog(null, "Please enter book publisher");
+        }
+        
+        if(bookCopiesTextField.getText() == null) {
+            JOptionPane.showMessageDialog(null, "Please enter number of book copies");
+        }
+        
+        if(bookFineTextField.getText() == null) {
+            JOptionPane.showMessageDialog(null, "Please enter book fine");
+        }
+        
         try {
             String sql = "INSERT INTO `book`"
-                    + "(`Book_id`, `Category_id`, `Category_name`, `Title`, `Edition`, `Author`, `Publisher`,`Copies`, `Fineperday`, `Remarks`) "
-                    + "values (?,?,?,?,?,?,?,?,?,?)";
+                    + "( `Category_id`, `Title`, `Edition`, `Author`, `Publisher`,`Copies`, `Fineperday`, `Remarks`) "
+                    + "values (?,?,?,?,?,?,?,?)";
             Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
-            pst.setString(1, bookIdTextField.getText());
-            String cat_id;
-            cat_id = bookCategoryIdComboBox.getSelectedItem().toString();
-            pst.setString(2, cat_id);
-            String catname;
-            catname = bookCategoryNameComboBox.getSelectedItem().toString();
-            pst.setString(3, catname);
+            selectedBookCategory = (Category) bookCategoryNameComboBox.getSelectedItem();
+            pst.setString(1, selectedBookCategory.getId().toString());
 
-            pst.setString(4, bookTitleTextField.getText());
+            pst.setString(2, bookTitleTextField.getText());
             String values;
             values = bookEditionComboBox.getSelectedItem().toString();
-            pst.setString(5, values);
-            pst.setString(6, bookAuthorTextField.getText());
-            pst.setString(7, bookPublisherTextField.getText());
-            pst.setString(8, bookCopiesTextField.getText());
-            pst.setString(9, bookFineTextField.getText());
-            pst.setString(10, bookRemarkTextField.getText());
+            pst.setString(3, values);
+            pst.setString(4, bookAuthorTextField.getText());
+            pst.setString(5, bookPublisherTextField.getText());
+            pst.setString(6, bookCopiesTextField.getText());
+            pst.setString(7, bookFineTextField.getText());
+            pst.setString(8, bookRemarkTextField.getText());
 
             pst.execute();
             JOptionPane.showMessageDialog(null, "New book added");
-//            rs.close();
-//            ps.close();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "An error occured please try again later.");
         }
 
     }
@@ -2027,14 +2069,20 @@ public class Librarians extends javax.swing.JFrame {
         }
     }
 
-    private void retrieve() throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException {
-        BookFactory b = new BookFactory();
-        BookView f = b.getBookView();
-        f.retrieveBook();
-        booksTable.setModel(DbUtils.resultSetToTableModel(rs));
+    private void displayBooksTable() {
 
+        try {
+            Connection con = DatabaseConnection.ConnecrDb();
+            String sql = "SELECT * FROM `book`";
+            pst = con.prepareStatement(sql);
+            rs = pst.executeQuery();
+            booksTable.setModel(DbUtils.resultSetToTableModel(rs));
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "An error occurred while retrieving books.");
+        }
     }
-
+    
     private void displayCategoriesTable() {
 
         try {
@@ -2045,7 +2093,102 @@ public class Librarians extends javax.swing.JFrame {
             categoriesTable.setModel(DbUtils.resultSetToTableModel(rs));
         } catch (SQLException ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "An error occurred while rretrieving categories.");
+            JOptionPane.showMessageDialog(null, "An error occurred while retrieving categories.");
+        }
+    }
+
+    private void setCategoriesTableListener() {
+
+        categoriesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent event) {
+
+                int categoryId = Integer.valueOf(categoriesTable.getValueAt(categoriesTable.getSelectedRow(), 0).toString());
+                String categoryName = categoriesTable.getValueAt(categoriesTable.getSelectedRow(), 1).toString();
+                category = new Category();
+
+                category.setId(categoryId);
+                category.setName(categoryName);
+
+                setCategoryTextFieldValues();
+
+            }
+        });
+    }
+    
+    private void setBooksTableListener() {
+
+        booksTable.setRowSelectionAllowed(true);
+        booksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent event) {
+
+                int bookId = Integer.valueOf(booksTable.getValueAt(booksTable.getSelectedRow(), 0).toString());
+                int categoryId = Integer.valueOf(booksTable.getValueAt(booksTable.getSelectedRow(), 1).toString());
+                String title = booksTable.getValueAt(booksTable.getSelectedRow(), 2).toString();
+                String edition = booksTable.getValueAt(booksTable.getSelectedRow(), 3).toString();
+                String author = booksTable.getValueAt(booksTable.getSelectedRow(), 4).toString();
+                String publisher = booksTable.getValueAt(booksTable.getSelectedRow(), 5).toString();
+                int copies = Integer.valueOf(booksTable.getValueAt(booksTable.getSelectedRow(), 6).toString());
+                int finePerDay = Integer.valueOf(booksTable.getValueAt(booksTable.getSelectedRow(), 7).toString());
+                String remarks = booksTable.getValueAt(booksTable.getSelectedRow(), 8).toString();
+                
+                book = new Book();
+                book.setId(bookId);
+                book.setCategoryId(categoryId);
+                book.setTitle(title);
+                book.setEdition(edition);
+                book.setAuthor(author);
+                book.setPublisher(publisher);
+                book.setCopies(copies);
+                book.setFinePerDay(finePerDay);
+                book.setRemarks(remarks);
+
+                setBookTextFieldValues();
+
+            }
+        });
+    }
+    
+    private void setBookTextFieldValues() {
+        if (book != null) {
+            if (book.getTitle() != null) {
+                bookTitleTextField.setText(book.getTitle());
+            }
+            
+            if (book.getAuthor() != null) {
+                bookAuthorTextField.setText(book.getAuthor());
+            }
+            
+            if (book.getPublisher()!= null) {
+                bookPublisherTextField.setText(book.getPublisher());
+            }
+            
+            if (book.getCopies()!= null) {
+                bookCopiesTextField.setText(book.getCopies().toString());
+            }
+            
+            if (book.getFinePerDay()!= null) {
+                bookFineTextField.setText(book.getFinePerDay().toString());
+            }
+            
+            if (book.getRemarks() != null) {
+                bookRemarkTextField.setText(book.getRemarks());
+            }
+            
+            if (book.getCategoryId()!= null) {
+                bookCategoryNameComboBox.setSelectedItem((Category) selectedBookCategory);
+            }
+            
+            if (book.getEdition()!= null) {
+                bookEditionComboBox.setSelectedItem(book.getEdition());
+            }
+        }
+    }
+
+    private void setCategoryTextFieldValues() {
+        if (category != null) {
+            if (category.getName() != null) {
+                categoryNameTextField.setText(category.getName());
+            }
         }
     }
 
@@ -2087,19 +2230,16 @@ public class Librarians extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField bookAuthorTextField;
-    private javax.swing.JComboBox<String> bookCategoryIdComboBox;
-    private javax.swing.JComboBox<String> bookCategoryNameComboBox;
+    private javax.swing.JComboBox<Category> bookCategoryNameComboBox;
     private javax.swing.JTextField bookCopiesTextField;
     private javax.swing.JComboBox<String> bookEditionComboBox;
     private javax.swing.JTextField bookFineTextField;
-    private javax.swing.JTextField bookIdTextField;
     private javax.swing.JTextField bookPublisherTextField;
     private javax.swing.JTextField bookRemarkTextField;
     private javax.swing.JTextField bookTitleTextField;
     private javax.swing.JTable booksTable;
     private javax.swing.JTabbedPane borrowBookTabbedPane;
     private javax.swing.JTable categoriesTable;
-    private javax.swing.JTextField categoryIdTextField;
     private javax.swing.JTextField categoryNameTextField;
     private javax.swing.JButton deleteBookButton;
     private javax.swing.JButton deleteCategoryButton;
@@ -2119,14 +2259,12 @@ public class Librarians extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
@@ -2157,7 +2295,6 @@ public class Librarians extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel56;
     private javax.swing.JLabel jLabel57;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
