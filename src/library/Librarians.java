@@ -5,7 +5,6 @@
  */
 package library;
 
-import java.awt.image.BufferedImage;
 import java.awt.print.PrinterJob;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -13,32 +12,24 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import static javax.management.Query.gt;
 import javax.print.PrintService;
-import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import library.models.Book;
 import library.models.Category;
-import library.models.Journal;
-import library.models.Novel;
 import library.renderer.CategoryListCellRenderer;
 import library.utils.JournalFactory;
 import library.utils.NormalBookFactory;
@@ -62,8 +53,10 @@ public class Librarians extends javax.swing.JFrame {
 
     private Category category;
     private Category selectedBookCategory;
-    
+
     private Book book;
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     public Librarians() {
         initComponents();
@@ -72,6 +65,7 @@ public class Librarians extends javax.swing.JFrame {
         setCategoriesTableListener();
         displayBooksTable();
         setBooksTableListener();
+
     }
 
     /**
@@ -88,35 +82,33 @@ public class Librarians extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         borrowBookTabbedPane = new javax.swing.JTabbedPane();
         jPanel4 = new javax.swing.JPanel();
-        jLabel24 = new javax.swing.JLabel();
-        jTextField21 = new javax.swing.JTextField();
         jLabel25 = new javax.swing.JLabel();
         jLabel26 = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
-        jLabel28 = new javax.swing.JLabel();
-        jLabel29 = new javax.swing.JLabel();
-        jLabel30 = new javax.swing.JLabel();
-        jLabel31 = new javax.swing.JLabel();
-        jTextField22 = new javax.swing.JTextField();
-        jButton14 = new javax.swing.JButton();
-        jTextField23 = new javax.swing.JTextField();
-        jTextField24 = new javax.swing.JTextField();
-        jTextField25 = new javax.swing.JTextField();
-        jLabel32 = new javax.swing.JLabel();
-        jLabel33 = new javax.swing.JLabel();
-        jTextField26 = new javax.swing.JTextField();
-        jTextField27 = new javax.swing.JTextField();
-        jButton15 = new javax.swing.JButton();
-        jLabel34 = new javax.swing.JLabel();
-        jLabel35 = new javax.swing.JLabel();
-        jTextField28 = new javax.swing.JTextField();
-        jTextField29 = new javax.swing.JTextField();
-        jButton16 = new javax.swing.JButton();
-        jButton17 = new javax.swing.JButton();
-        jLabel36 = new javax.swing.JLabel();
-        jTextField30 = new javax.swing.JTextField();
-        jLabel37 = new javax.swing.JLabel();
-        jTextField31 = new javax.swing.JTextField();
+        borrowBookBookIDLabel = new javax.swing.JLabel();
+        borrowBookBookTitleLabel = new javax.swing.JLabel();
+        borrowBookBookCopiesLabel = new javax.swing.JLabel();
+        borrowBookFinePerDayLabel = new javax.swing.JLabel();
+        borrowBookBookIdTextField = new javax.swing.JTextField();
+        borroBookBookSearchButton = new javax.swing.JButton();
+        borrowBookTitleTextField = new javax.swing.JTextField();
+        borrowBookCopiesTextField = new javax.swing.JTextField();
+        borrowBookFinePerDayTextField = new javax.swing.JTextField();
+        borrowBookmemberIdLabel = new javax.swing.JLabel();
+        borrowBookMemberNameLabel = new javax.swing.JLabel();
+        borrowBookMemberIdTextField = new javax.swing.JTextField();
+        borrowBookMemberNameTextField = new javax.swing.JTextField();
+        borrowBookMemberSearchButton = new javax.swing.JButton();
+        borrowBookLibrarianIdLabel = new javax.swing.JLabel();
+        borrowBookLibrarianNameLabel = new javax.swing.JLabel();
+        borrowBookLibrarianIdTextField = new javax.swing.JTextField();
+        borrowBookLibrarianNameTextField = new javax.swing.JTextField();
+        borrowBookLibrarianSearchButton = new javax.swing.JButton();
+        borrowBookIssueButton = new javax.swing.JButton();
+        borrowBookDateOfIssueLabel = new javax.swing.JLabel();
+        borrowBookDateOfIssueTextField = new javax.swing.JTextField();
+        borrowBookLabel = new javax.swing.JLabel();
+        borrowBookDueDateTextField = new javax.swing.JTextField();
         jPanel8 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -255,11 +247,6 @@ public class Librarians extends javax.swing.JFrame {
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel24.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel24.setText("Member ID:");
-
-        jTextField21.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
-
         jLabel25.setFont(new java.awt.Font("Book Antiqua", 1, 18)); // NOI18N
         jLabel25.setText("BOOK  DETAILS");
 
@@ -267,104 +254,109 @@ public class Librarians extends javax.swing.JFrame {
         jLabel26.setText("LIBRARIAN  DETAILS");
 
         jLabel27.setFont(new java.awt.Font("Book Antiqua", 1, 18)); // NOI18N
-        jLabel27.setText("READER  DETAILS");
+        jLabel27.setText("MEMBER  DETAILS");
 
-        jLabel28.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel28.setText("Book ID:");
+        borrowBookBookIDLabel.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        borrowBookBookIDLabel.setText("Book ID:");
 
-        jLabel29.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel29.setText("Title:");
+        borrowBookBookTitleLabel.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        borrowBookBookTitleLabel.setText("Title:");
 
-        jLabel30.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel30.setText("Copies:");
+        borrowBookBookCopiesLabel.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        borrowBookBookCopiesLabel.setText("Copies:");
 
-        jLabel31.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel31.setText("Fine per day:");
+        borrowBookFinePerDayLabel.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        borrowBookFinePerDayLabel.setText("Fine per day:");
 
-        jTextField22.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        borrowBookBookIdTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
 
-        jButton14.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
-        jButton14.setText("Search");
-        jButton14.addMouseListener(new java.awt.event.MouseAdapter() {
+        borroBookBookSearchButton.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
+        borroBookBookSearchButton.setText("Search");
+        borroBookBookSearchButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton14MouseClicked(evt);
+                borroBookBookSearchButtonMouseClicked(evt);
             }
         });
 
-        jTextField23.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
-        jTextField23.setEnabled(false);
-        jTextField23.addActionListener(new java.awt.event.ActionListener() {
+        borrowBookTitleTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        borrowBookTitleTextField.setEnabled(false);
+        borrowBookTitleTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField23ActionPerformed(evt);
+                borrowBookTitleTextFieldActionPerformed(evt);
             }
         });
 
-        jTextField24.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
-        jTextField24.setEnabled(false);
+        borrowBookCopiesTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        borrowBookCopiesTextField.setEnabled(false);
 
-        jTextField25.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
-        jTextField25.setEnabled(false);
+        borrowBookFinePerDayTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        borrowBookFinePerDayTextField.setEnabled(false);
 
-        jLabel32.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel32.setText("ID:");
+        borrowBookmemberIdLabel.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        borrowBookmemberIdLabel.setText("ID:");
 
-        jLabel33.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel33.setText("Name:");
+        borrowBookMemberNameLabel.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        borrowBookMemberNameLabel.setText("Name:");
 
-        jTextField26.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        borrowBookMemberIdTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
 
-        jTextField27.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
-        jTextField27.setEnabled(false);
+        borrowBookMemberNameTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        borrowBookMemberNameTextField.setEnabled(false);
 
-        jButton15.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
-        jButton15.setText("Search");
-        jButton15.addMouseListener(new java.awt.event.MouseAdapter() {
+        borrowBookMemberSearchButton.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
+        borrowBookMemberSearchButton.setText("Search");
+        borrowBookMemberSearchButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton15MouseClicked(evt);
+                borrowBookMemberSearchButtonMouseClicked(evt);
             }
         });
 
-        jLabel34.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel34.setText("ID:");
+        borrowBookLibrarianIdLabel.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        borrowBookLibrarianIdLabel.setText("ID:");
 
-        jLabel35.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel35.setText("Name:");
+        borrowBookLibrarianNameLabel.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        borrowBookLibrarianNameLabel.setText("Name:");
 
-        jTextField28.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        borrowBookLibrarianIdTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
 
-        jTextField29.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
-        jTextField29.setEnabled(false);
-        jTextField29.addActionListener(new java.awt.event.ActionListener() {
+        borrowBookLibrarianNameTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        borrowBookLibrarianNameTextField.setEnabled(false);
+        borrowBookLibrarianNameTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField29ActionPerformed(evt);
+                borrowBookLibrarianNameTextFieldActionPerformed(evt);
             }
         });
 
-        jButton16.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
-        jButton16.setText("Search");
-        jButton16.addMouseListener(new java.awt.event.MouseAdapter() {
+        borrowBookLibrarianSearchButton.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
+        borrowBookLibrarianSearchButton.setText("Search");
+        borrowBookLibrarianSearchButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton16MouseClicked(evt);
+                borrowBookLibrarianSearchButtonMouseClicked(evt);
             }
         });
 
-        jButton17.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
-        jButton17.setText("Issue");
-        jButton17.addMouseListener(new java.awt.event.MouseAdapter() {
+        borrowBookIssueButton.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
+        borrowBookIssueButton.setText("Issue");
+        borrowBookIssueButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton17MouseClicked(evt);
+                borrowBookIssueButtonMouseClicked(evt);
             }
         });
 
-        jLabel36.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel36.setText("Date of issue:");
+        borrowBookDateOfIssueLabel.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        borrowBookDateOfIssueLabel.setText("Date of issue:");
 
-        jTextField30.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        borrowBookDateOfIssueTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
 
-        jLabel37.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel37.setText("Due date:");
+        borrowBookLabel.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        borrowBookLabel.setText("Due date:");
 
-        jTextField31.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        borrowBookDueDateTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        borrowBookDueDateTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                borrowBookDueDateTextFieldMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -372,92 +364,82 @@ public class Librarians extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(233, 233, 233)
-                        .addComponent(jLabel24))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
-                            .addComponent(jLabel31)
-                            .addGap(18, 18, 18)
-                            .addComponent(jTextField25))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
-                            .addComponent(jLabel30)
-                            .addGap(47, 47, 47)
-                            .addComponent(jTextField24, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel28)
-                            .addComponent(jLabel29))
-                        .addGap(41, 41, 41)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jTextField22, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton14))
-                            .addComponent(jTextField23, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel36)
-                        .addGap(29, 29, 29)))
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(borrowBookDateOfIssueLabel)
+                        .addGap(29, 29, 29))
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(jTextField21, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGap(28, 28, 28)
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel4Layout.createSequentialGroup()
-                                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel32)
-                                            .addComponent(jLabel33))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jTextField27, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
-                                            .addComponent(jTextField26))
-                                        .addGap(23, 23, 23)
-                                        .addComponent(jButton15))
-                                    .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jTextField30, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 209, Short.MAX_VALUE)
-                                .addComponent(jLabel37)))
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGap(110, 110, 110)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                                    .addComponent(borrowBookFinePerDayLabel)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(borrowBookFinePerDayTextField))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                                    .addComponent(borrowBookBookCopiesLabel)
+                                    .addGap(47, 47, 47)
+                                    .addComponent(borrowBookCopiesTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel34)
-                                    .addComponent(jLabel35))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(borrowBookBookIDLabel)
+                                    .addComponent(borrowBookBookTitleLabel))
+                                .addGap(41, 41, 41)
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel4Layout.createSequentialGroup()
-                                        .addComponent(jTextField28, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jButton16))
-                                    .addComponent(jTextField29, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(borrowBookBookIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(borroBookBookSearchButton))
+                                    .addComponent(borrowBookTitleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(13, 13, 13)))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(jTextField31, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(243, Short.MAX_VALUE))))
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(borrowBookmemberIdLabel)
+                                    .addComponent(borrowBookMemberNameLabel))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(borrowBookMemberNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
+                                    .addComponent(borrowBookMemberIdTextField))
+                                .addGap(23, 23, 23)
+                                .addComponent(borrowBookMemberSearchButton))
+                            .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(borrowBookDateOfIssueTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 209, Short.MAX_VALUE)
+                        .addComponent(borrowBookLabel)))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(110, 110, 110)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(borrowBookLibrarianIdLabel)
+                            .addComponent(borrowBookLibrarianNameLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(borrowBookLibrarianIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(borrowBookLibrarianSearchButton))
+                            .addComponent(borrowBookLibrarianNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(borrowBookDueDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(243, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton17)
+                .addComponent(borrowBookIssueButton)
                 .addGap(406, 406, 406))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel24)
-                    .addComponent(jTextField21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(44, 44, 44)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel26, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -467,44 +449,44 @@ public class Librarians extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(27, 27, 27)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel28)
-                            .addComponent(jTextField22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton14)
-                            .addComponent(jLabel32)
-                            .addComponent(jTextField26, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton15))
+                            .addComponent(borrowBookBookIDLabel)
+                            .addComponent(borrowBookBookIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(borroBookBookSearchButton)
+                            .addComponent(borrowBookmemberIdLabel)
+                            .addComponent(borrowBookMemberIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(borrowBookMemberSearchButton))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel29)
-                            .addComponent(jTextField23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel33)
-                            .addComponent(jTextField27, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(borrowBookBookTitleLabel)
+                            .addComponent(borrowBookTitleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(borrowBookMemberNameLabel)
+                            .addComponent(borrowBookMemberNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel30)
-                            .addComponent(jTextField24, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(borrowBookBookCopiesLabel)
+                            .addComponent(borrowBookCopiesTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(27, 27, 27)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel31)
-                            .addComponent(jTextField25, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(borrowBookFinePerDayLabel)
+                            .addComponent(borrowBookFinePerDayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel34)
-                            .addComponent(jTextField28, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton16))
+                            .addComponent(borrowBookLibrarianIdLabel)
+                            .addComponent(borrowBookLibrarianIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(borrowBookLibrarianSearchButton))
                         .addGap(19, 19, 19)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel35)
-                            .addComponent(jTextField29, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(borrowBookLibrarianNameLabel)
+                            .addComponent(borrowBookLibrarianNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(39, 39, 39)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel36)
-                    .addComponent(jTextField30, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel37)
-                    .addComponent(jTextField31, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(borrowBookDateOfIssueLabel)
+                    .addComponent(borrowBookDateOfIssueTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(borrowBookLabel)
+                    .addComponent(borrowBookDueDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(53, 53, 53)
-                .addComponent(jButton17)
+                .addComponent(borrowBookIssueButton)
                 .addContainerGap(253, Short.MAX_VALUE))
         );
 
@@ -1344,7 +1326,7 @@ public class Librarians extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(borrowBookTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -1601,34 +1583,36 @@ public class Librarians extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jPanel1MouseClicked
 
-    private void jTextField29ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField29ActionPerformed
+    private void borrowBookLibrarianNameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borrowBookLibrarianNameTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField29ActionPerformed
+    }//GEN-LAST:event_borrowBookLibrarianNameTextFieldActionPerformed
 
-    private void jTextField23ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField23ActionPerformed
+    private void borrowBookTitleTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borrowBookTitleTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField23ActionPerformed
+    }//GEN-LAST:event_borrowBookTitleTextFieldActionPerformed
 
-    private void jButton14MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton14MouseClicked
+    private void borroBookBookSearchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_borroBookBookSearchButtonMouseClicked
         // TODO add your handling code here:
         String sql = "SELECT * FROM `book` WHERE `Book_id`=?";
         try {
             Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
-            pst.setString(1, jTextField22.getText());
+            pst.setString(1, borrowBookBookIdTextField.getText());
             rs = pst.executeQuery();
             if (rs.next()) {
                 String add1 = rs.getString("Title");
-                jTextField23.setText(add1);
+                borrowBookTitleTextField.setText(add1);
 
                 String add2 = rs.getString("Copies");
-                jTextField24.setText(add2);
+                borrowBookCopiesTextField.setText(add2);
 
                 String add3 = rs.getString("Fineperday");
-                jTextField25.setText(add3);
+                borrowBookFinePerDayTextField.setText(add3);
 
                 rs.close();
                 pst.close();
+
+                setBorrowBookDates();
             } else {
                 JOptionPane.showMessageDialog(null, "Book is not found");
             }
@@ -1642,19 +1626,19 @@ public class Librarians extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, e);
             }
         }
-    }//GEN-LAST:event_jButton14MouseClicked
+    }//GEN-LAST:event_borroBookBookSearchButtonMouseClicked
 
-    private void jButton15MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton15MouseClicked
+    private void borrowBookMemberSearchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_borrowBookMemberSearchButtonMouseClicked
         // TODO add your handling code here:
         String sql = "SELECT * FROM `readers` WHERE `readers_id`=?";
         try {
             Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
-            pst.setString(1, jTextField26.getText());
+            pst.setString(1, borrowBookMemberIdTextField.getText());
             rs = pst.executeQuery();
             if (rs.next()) {
                 String add4 = rs.getString("reader_Name");
-                jTextField27.setText(add4);
+                borrowBookMemberNameTextField.setText(add4);
 
                 rs.close();
                 pst.close();
@@ -1671,19 +1655,19 @@ public class Librarians extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, e);
             }
         }
-    }//GEN-LAST:event_jButton15MouseClicked
+    }//GEN-LAST:event_borrowBookMemberSearchButtonMouseClicked
 
-    private void jButton16MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton16MouseClicked
+    private void borrowBookLibrarianSearchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_borrowBookLibrarianSearchButtonMouseClicked
         // TODO add your handling code here:
         String sql = "SELECT * FROM `librarian` WHERE `librarian_Id`=?";
         try {
             Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
-            pst.setString(1, jTextField28.getText());
+            pst.setString(1, borrowBookLibrarianIdTextField.getText());
             rs = pst.executeQuery();
             if (rs.next()) {
                 String add5 = rs.getString("librarian_name");
-                jTextField29.setText(add5);
+                borrowBookLibrarianNameTextField.setText(add5);
 
                 rs.close();
                 pst.close();
@@ -1700,42 +1684,57 @@ public class Librarians extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, e);
             }
         }
-    }//GEN-LAST:event_jButton16MouseClicked
+    }//GEN-LAST:event_borrowBookLibrarianSearchButtonMouseClicked
 
-    private void jButton17MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton17MouseClicked
+    private void borrowBookIssueButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_borrowBookIssueButtonMouseClicked
         // TODO add your handling code here:
-        String sql = "INSERT INTO `borrowers`(`Borrower_id`, `Book_id`, `Title`, `copies`, `Fineperday`, `readers_id`,"
+        String sql = "INSERT INTO `borrowers`(`Book_id`, `Title`, `copies`, `Fineperday`, `readers_id`,"
                 + "`reader_Name`, `librarian_id`, `librarian_name`, `releasedate`, `duedate`)"
-                + "values(?,?,?,?,?,?,?,?,?,?,?)";
+                + "values(?,?,?,?,?,?,?,?,?,?)";
         try {
             Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
-            pst.setString(1, jTextField21.getText());
-            pst.setString(2, jTextField22.getText());
-            pst.setString(3, jTextField23.getText());
-            pst.setString(4, jTextField24.getText());
-            pst.setString(5, jTextField25.getText());
-            pst.setString(6, jTextField26.getText());
-            pst.setString(7, jTextField27.getText());
-            pst.setString(8, jTextField28.getText());
-            pst.setString(9, jTextField29.getText());
-            pst.setString(10, jTextField30.getText());
-            pst.setString(11, jTextField31.getText());
+            pst.setString(1, borrowBookBookIdTextField.getText());
+            pst.setString(2, borrowBookTitleTextField.getText());
+            pst.setString(3, borrowBookCopiesTextField.getText());
+            pst.setString(4, borrowBookFinePerDayTextField.getText());
+            pst.setString(5, borrowBookMemberIdTextField.getText());
+            pst.setString(6, borrowBookMemberNameTextField.getText());
+            pst.setString(7, borrowBookLibrarianIdTextField.getText());
+            pst.setString(8, borrowBookLibrarianNameTextField.getText());
 
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Book issued");
-            update();
+            Date today = new Date();
+            today.toString();
+
+            // Set Due Date to be 10 days after issue
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DAY_OF_MONTH, 10);
+            Date dueDate = cal.getTime();
+            
+            java.sql.Date todayDBDate = new java.sql.Date(today.getTime());
+            java.sql.Date dueDateDBDate = new java.sql.Date(dueDate.getTime());
+
+            pst.setDate(9, todayDBDate);
+            pst.setDate(10, dueDateDBDate);
+
+            boolean issued = pst.execute();
+            if(issued)
+                JOptionPane.showMessageDialog(null, "Book succcessfully issued.");
+            else 
+                JOptionPane.showMessageDialog(null, "Failed to issue book.");
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Failed to issue book. An exception occurred. Please try again later.");
         } finally {
             try {
                 rs.close();
                 pst.close();
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e);
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Failed to issue book. An exception occurred. Please try again later.");
             }
         }
-    }//GEN-LAST:event_jButton17MouseClicked
+    }//GEN-LAST:event_borrowBookIssueButtonMouseClicked
 
     private void jTextField37ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField37ActionPerformed
         // TODO add your handling code here:
@@ -1794,7 +1793,7 @@ public class Librarians extends javax.swing.JFrame {
 
     private void jButton18MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton18MouseClicked
         // TODO add your handling code here:
-        returnUpdate();
+        returnBorrowedBook();
         delete();
     }//GEN-LAST:event_jButton18MouseClicked
 
@@ -1818,7 +1817,7 @@ public class Librarians extends javax.swing.JFrame {
 
             Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
-            
+
             Category category = (Category) bookCategoryNameComboBox.getSelectedItem();
             pst.setString(1, category.getId().toString());
             pst.setString(2, bookTitleTextField.getText());
@@ -1876,11 +1875,12 @@ public class Librarians extends javax.swing.JFrame {
     // Implementation of Factory Pattern
     private void bookTypeComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_bookTypeComboBoxItemStateChanged
 
-        if(evt == null)
+        if (evt == null) {
             return;
-        
+        }
+
         String selectedBookType = bookTypeComboBox.getSelectedItem().toString();
-        switch(selectedBookType){
+        switch (selectedBookType) {
             case "Novel":
                 NovelFactory novelFactory = new NovelFactory();
                 book = novelFactory.createBook();
@@ -1896,10 +1896,14 @@ public class Librarians extends javax.swing.JFrame {
                 book = normalBookFactory.createBook();
                 break;
         }
-        
+
     }//GEN-LAST:event_bookTypeComboBoxItemStateChanged
 
-    public void returnUpdate() {
+    private void borrowBookDueDateTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_borrowBookDueDateTextFieldMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_borrowBookDueDateTextFieldMouseClicked
+
+    public void returnBorrowedBook() {
         String sql = "INSERT INTO `return`(`return_id`, `Borrower_id`, `readers_id`, `reader_Name`, `Book_id`,"
                 + "`Title`, `Duedate`, `Releasedate`, `Returndate`, `Fineperday`, `TotalFIne`)"
                 + "values(?,?,?,?,?,?,?,?,?,?,?)";
@@ -1947,7 +1951,7 @@ public class Librarians extends javax.swing.JFrame {
                 Category category = new Category();
                 category.setId(Integer.valueOf(rs.getString(1)));
                 category.setName(rs.getString(2));
-                
+
                 bookCategoryNameComboBox.addItem(category);
                 bookCategoryNameComboBox.setRenderer(new CategoryListCellRenderer());
             }
@@ -1996,18 +2000,18 @@ public class Librarians extends javax.swing.JFrame {
         }
     }
 
-    public void update() {
-        int st = Integer.parseInt(jTextField24.getText());
+    public void updateBorrowBook() {
+        int st = Integer.parseInt(borrowBookCopiesTextField.getText());
         int q = 1;
         int sup = st - q;
         String s = String.valueOf(sup);
-        jTextField24.setText(s);
+        borrowBookCopiesTextField.setText(s);
         try {
             Connection con = DatabaseConnection.ConnecrDb();
             int n = Integer.parseInt(s);
             if (n == 0) {
-                String val1 = jTextField22.getText();
-                String val2 = jTextField24.getText();
+                String val1 = borrowBookBookIdTextField.getText();
+                String val2 = borrowBookCopiesTextField.getText();
                 String sql = "update book set Book_id='" + val1 + "', "
                         + "Copies='" + val2 + "' where Book_id='" + val1 + "'";
                 pst = con.prepareStatement(sql);
@@ -2031,26 +2035,26 @@ public class Librarians extends javax.swing.JFrame {
     public void saveBookDetails() {
 
         String title, edition, author, publisher;
-        if(bookTitleTextField.getText() == null) {
+        if (bookTitleTextField.getText() == null) {
             JOptionPane.showMessageDialog(null, "Please enter book title");
         }
-        
-        if(bookAuthorTextField.getText() == null) {
+
+        if (bookAuthorTextField.getText() == null) {
             JOptionPane.showMessageDialog(null, "Please enter book author");
         }
-        
-        if(bookPublisherTextField.getText() == null) {
+
+        if (bookPublisherTextField.getText() == null) {
             JOptionPane.showMessageDialog(null, "Please enter book publisher");
         }
-        
-        if(bookCopiesTextField.getText() == null) {
+
+        if (bookCopiesTextField.getText() == null) {
             JOptionPane.showMessageDialog(null, "Please enter number of book copies");
         }
-        
-        if(bookFineTextField.getText() == null) {
+
+        if (bookFineTextField.getText() == null) {
             JOptionPane.showMessageDialog(null, "Please enter book fine");
         }
-        
+
         try {
             String sql = "INSERT INTO `book`"
                     + "( `Category_id`, `Title`, `Edition`, `Author`, `Publisher`,`Copies`, `Fineperday`, `Remarks`) "
@@ -2134,8 +2138,8 @@ public class Librarians extends javax.swing.JFrame {
 
         try {
             Connection con = DatabaseConnection.ConnecrDb();
-            String sql = "SELECT Book_id as 'ID', category.Category_name as 'Category Name', Title, Edition, Author,\n" +
-                            "Publisher, Copies 'Available Copies', Fineperday AS 'Fine per day', Remarks FROM `book` LEFT JOIN category ON category.Category_id = book.Category_id";
+            String sql = "SELECT Book_id as 'ID', category.Category_name as 'Category Name', Title, Edition, Author,\n"
+                    + "Publisher, Copies 'Available Copies', Fineperday AS 'Fine per day', Remarks FROM `book` LEFT JOIN category ON category.Category_id = book.Category_id";
             pst = con.prepareStatement(sql);
             rs = pst.executeQuery();
             booksTable.setModel(DbUtils.resultSetToTableModel(rs));
@@ -2144,7 +2148,7 @@ public class Librarians extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "An error occurred while retrieving books.");
         }
     }
-    
+
     private void displayCategoriesTable() {
 
         try {
@@ -2176,7 +2180,7 @@ public class Librarians extends javax.swing.JFrame {
             }
         });
     }
-    
+
     private void setBooksTableListener() {
 
         booksTable.setRowSelectionAllowed(true);
@@ -2192,7 +2196,7 @@ public class Librarians extends javax.swing.JFrame {
                 int copies = Integer.valueOf(booksTable.getValueAt(booksTable.getSelectedRow(), 6).toString());
                 int finePerDay = Integer.valueOf(booksTable.getValueAt(booksTable.getSelectedRow(), 7).toString());
                 String remarks = booksTable.getValueAt(booksTable.getSelectedRow(), 8).toString();
-                
+
                 book = new Book();
                 book.setId(bookId);
                 book.setCategoryId(categoryId);
@@ -2209,38 +2213,38 @@ public class Librarians extends javax.swing.JFrame {
             }
         });
     }
-    
+
     private void setBookTextFieldValues() {
         if (book != null) {
             if (book.getTitle() != null) {
                 bookTitleTextField.setText(book.getTitle());
             }
-            
+
             if (book.getAuthor() != null) {
                 bookAuthorTextField.setText(book.getAuthor());
             }
-            
-            if (book.getPublisher()!= null) {
+
+            if (book.getPublisher() != null) {
                 bookPublisherTextField.setText(book.getPublisher());
             }
-            
-            if (book.getCopies()!= null) {
+
+            if (book.getCopies() != null) {
                 bookCopiesTextField.setText(book.getCopies().toString());
             }
-            
-            if (book.getFinePerDay()!= null) {
+
+            if (book.getFinePerDay() != null) {
                 bookFineTextField.setText(book.getFinePerDay().toString());
             }
-            
+
             if (book.getRemarks() != null) {
                 bookRemarkTextField.setText(book.getRemarks());
             }
-            
-            if (book.getCategoryId()!= null) {
+
+            if (book.getCategoryId() != null) {
                 bookCategoryNameComboBox.setSelectedItem((Category) selectedBookCategory);
             }
-            
-            if (book.getEdition()!= null) {
+
+            if (book.getEdition() != null) {
                 bookEditionComboBox.setSelectedItem(book.getEdition());
             }
         }
@@ -2253,15 +2257,31 @@ public class Librarians extends javax.swing.JFrame {
             }
         }
     }
-    
+
     private void hideBookFields() {
         bookNoOfArticlesPublishedTextField.setEnabled(false);
         bookNoOfArticlesPublishedLabel.setEnabled(false);
     }
-    
+
     private void showBookFields() {
         bookNoOfArticlesPublishedTextField.setEnabled(true);
         bookNoOfArticlesPublishedLabel.setEnabled(true);
+    }
+
+    private void setBorrowBookDates() {
+        Date today = new Date();
+        today.toString();
+
+        // Set Due Date to be 10 days after issue
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_MONTH, 10);
+        Date dueDate = cal.getTime();
+
+        borrowBookDateOfIssueTextField.setEditable(false);
+        borrowBookDateOfIssueTextField.setText(dateFormat.format(today));
+
+        borrowBookDueDateTextField.setEditable(false);
+        borrowBookDueDateTextField.setText(dateFormat.format(dueDate));
     }
 
     /**
@@ -2322,7 +2342,31 @@ public class Librarians extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> bookTypeComboBox;
     private javax.swing.JLabel bookTypeLabel;
     private javax.swing.JTable booksTable;
+    private javax.swing.JButton borroBookBookSearchButton;
+    private javax.swing.JLabel borrowBookBookCopiesLabel;
+    private javax.swing.JLabel borrowBookBookIDLabel;
+    private javax.swing.JTextField borrowBookBookIdTextField;
+    private javax.swing.JLabel borrowBookBookTitleLabel;
+    private javax.swing.JTextField borrowBookCopiesTextField;
+    private javax.swing.JLabel borrowBookDateOfIssueLabel;
+    private javax.swing.JTextField borrowBookDateOfIssueTextField;
+    private javax.swing.JTextField borrowBookDueDateTextField;
+    private javax.swing.JLabel borrowBookFinePerDayLabel;
+    private javax.swing.JTextField borrowBookFinePerDayTextField;
+    private javax.swing.JButton borrowBookIssueButton;
+    private javax.swing.JLabel borrowBookLabel;
+    private javax.swing.JLabel borrowBookLibrarianIdLabel;
+    private javax.swing.JTextField borrowBookLibrarianIdTextField;
+    private javax.swing.JLabel borrowBookLibrarianNameLabel;
+    private javax.swing.JTextField borrowBookLibrarianNameTextField;
+    private javax.swing.JButton borrowBookLibrarianSearchButton;
+    private javax.swing.JTextField borrowBookMemberIdTextField;
+    private javax.swing.JLabel borrowBookMemberNameLabel;
+    private javax.swing.JTextField borrowBookMemberNameTextField;
+    private javax.swing.JButton borrowBookMemberSearchButton;
     private javax.swing.JTabbedPane borrowBookTabbedPane;
+    private javax.swing.JTextField borrowBookTitleTextField;
+    private javax.swing.JLabel borrowBookmemberIdLabel;
     private javax.swing.JTable categoriesTable;
     private javax.swing.JTextField categoryNameTextField;
     private javax.swing.JButton deleteBookButton;
@@ -2330,10 +2374,6 @@ public class Librarians extends javax.swing.JFrame {
     private javax.swing.JButton deleteMemberButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton14;
-    private javax.swing.JButton jButton15;
-    private javax.swing.JButton jButton16;
-    private javax.swing.JButton jButton17;
     private javax.swing.JButton jButton18;
     private javax.swing.JButton jButton19;
     private javax.swing.JComboBox<String> jComboBox1;
@@ -2343,20 +2383,9 @@ public class Librarians extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
-    private javax.swing.JLabel jLabel29;
-    private javax.swing.JLabel jLabel30;
-    private javax.swing.JLabel jLabel31;
-    private javax.swing.JLabel jLabel32;
-    private javax.swing.JLabel jLabel33;
-    private javax.swing.JLabel jLabel34;
-    private javax.swing.JLabel jLabel35;
-    private javax.swing.JLabel jLabel36;
-    private javax.swing.JLabel jLabel37;
     private javax.swing.JLabel jLabel38;
     private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel40;
@@ -2394,17 +2423,6 @@ public class Librarians extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTable jTable4;
-    private javax.swing.JTextField jTextField21;
-    private javax.swing.JTextField jTextField22;
-    private javax.swing.JTextField jTextField23;
-    private javax.swing.JTextField jTextField24;
-    private javax.swing.JTextField jTextField25;
-    private javax.swing.JTextField jTextField26;
-    private javax.swing.JTextField jTextField27;
-    private javax.swing.JTextField jTextField28;
-    private javax.swing.JTextField jTextField29;
-    private javax.swing.JTextField jTextField30;
-    private javax.swing.JTextField jTextField31;
     private javax.swing.JTextField jTextField32;
     private javax.swing.JTextField jTextField33;
     private javax.swing.JTextField jTextField34;
