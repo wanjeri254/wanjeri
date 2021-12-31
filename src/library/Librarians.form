@@ -204,7 +204,7 @@
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
                                           <Component id="jTextField30" min="-2" pref="154" max="-2" attributes="0"/>
-                                          <EmptySpace pref="203" max="32767" attributes="0"/>
+                                          <EmptySpace pref="209" max="32767" attributes="0"/>
                                           <Component id="jLabel37" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -231,7 +231,7 @@
                                           <Component id="jTextField31" min="-2" pref="197" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                                  <EmptySpace pref="236" max="32767" attributes="0"/>
+                                  <EmptySpace pref="243" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -321,7 +321,7 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Book Antiqua" size="12" style="1"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Borrower ID:"/>
+                    <Property name="text" type="java.lang.String" value="Member ID:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="jTextField21">
@@ -609,7 +609,7 @@
                           <Component id="jSeparator1" min="-2" pref="50" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jScrollPane2" min="-2" pref="490" max="-2" attributes="0"/>
-                          <EmptySpace pref="504" max="32767" attributes="0"/>
+                          <EmptySpace pref="511" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1098,7 +1098,7 @@
                                   <Component id="jTextField33" alignment="1" min="-2" pref="141" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace pref="614" max="32767" attributes="0"/>
+                          <EmptySpace pref="621" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1507,7 +1507,7 @@
                                           <Component id="jScrollPane5" min="-2" pref="847" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                                  <EmptySpace pref="239" max="32767" attributes="0"/>
+                                  <EmptySpace pref="246" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -1647,7 +1647,7 @@
                               <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                               <Component id="jComboBox1" min="-2" pref="187" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="1130" max="32767" attributes="0"/>
+                          <EmptySpace pref="1137" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1713,25 +1713,18 @@
                               <Component id="saveBookButton" alignment="1" max="32767" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                              <Component id="bookCategoryNameLabel" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="bookTitleLabel" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="bookEditionLabel" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="bookAuthorLabel" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="bookPublisherLabel" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="bookCopiesLabel" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="bookFinePerDayLabel" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="bookRemarksLabel" alignment="0" max="32767" attributes="0"/>
-                                          </Group>
-                                          <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="bookTypeLabel" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="32767" attributes="0"/>
-                                      </Group>
+                                      <Component id="bookTypeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="bookNoOfArticlesPublishedLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="bookRemarksLabel" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
+                                      <Component id="bookFinePerDayLabel" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
+                                      <Component id="bookCopiesLabel" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
+                                      <Component id="bookPublisherLabel" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
+                                      <Component id="bookAuthorLabel" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
+                                      <Component id="bookEditionLabel" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
+                                      <Component id="bookTitleLabel" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
+                                      <Component id="bookCategoryNameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
+                                  <EmptySpace max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="bookAuthorTextField" alignment="0" max="32767" attributes="0"/>
                                       <Component id="bookPublisherTextField" alignment="0" max="32767" attributes="0"/>
@@ -1742,6 +1735,7 @@
                                       <Component id="bookTitleTextField" alignment="0" max="32767" attributes="0"/>
                                       <Component id="bookEditionComboBox" alignment="0" max="32767" attributes="0"/>
                                       <Component id="bookTypeComboBox" max="32767" attributes="0"/>
+                                      <Component id="bookNoOfArticlesPublishedTextField" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -1786,14 +1780,14 @@
                                       <Component id="bookCategoryNameComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="bookTitleLabel" min="-2" max="-2" attributes="0"/>
-                                      <Component id="bookTitleTextField" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="bookTitleTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="bookTitleLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="bookEditionLabel" min="-2" max="-2" attributes="0"/>
-                                      <Component id="bookEditionComboBox" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="bookEditionComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="bookEditionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
@@ -1806,9 +1800,9 @@
                                       <Component id="bookPublisherTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="bookCopiesLabel" min="-2" max="-2" attributes="0"/>
-                                      <Component id="bookCopiesTextField" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="bookCopiesTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="bookCopiesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
@@ -1820,7 +1814,12 @@
                                       <Component id="bookRemarksLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="bookRemarkTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="59" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="bookNoOfArticlesPublishedLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="bookNoOfArticlesPublishedTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                                   <Component id="saveBookButton" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -2071,6 +2070,21 @@
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                   </AuxValues>
+                </Component>
+                <Component class="javax.swing.JLabel" name="bookNoOfArticlesPublishedLabel">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Book Antiqua" size="12" style="1"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="No of Articles Published:"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="bookNoOfArticlesPublishedTextField">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Book Antiqua" size="12" style="0"/>
+                    </Property>
+                  </Properties>
                 </Component>
               </SubComponents>
             </Container>
