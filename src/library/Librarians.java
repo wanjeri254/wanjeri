@@ -17,6 +17,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,8 +30,12 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import library.models.Book;
+import library.models.BorrowTransaction;
 import library.models.Category;
+import library.models.UserMember;
 import library.renderer.CategoryListCellRenderer;
+import library.utils.BookFineFacade;
+import library.utils.DBConnectionInterface;
 import library.utils.JournalFactory;
 import library.utils.NormalBookFactory;
 import library.utils.NovelFactory;
@@ -47,7 +52,7 @@ public class Librarians extends javax.swing.JFrame {
      */
     Connection con = null;
     PreparedStatement pst = null;
-    ResultSet rs = null;
+    ResultSet resultSet = null;
 
     private String id, name, phone, email, gender, password;
 
@@ -55,17 +60,28 @@ public class Librarians extends javax.swing.JFrame {
     private Category selectedBookCategory;
 
     private Book book;
+    private UserMember member;
+    
+    private BorrowTransaction borrowTransaction;
+    private final DBConnectionInterface dBConnectionInterface = new DatabaseConnection();
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     public Librarians() {
         initComponents();
         setTextFields();
+        
         displayCategoriesTable();
         setCategoriesTableListener();
+        
         displayBooksTable();
         setBooksTableListener();
-
+        
+        displayMembersTable();
+        setMembersTableListener();
+        
+        displayBorrowedBookTable();
+        setBorrowedBooksTableListener();
     }
 
     /**
@@ -110,13 +126,11 @@ public class Librarians extends javax.swing.JFrame {
         borrowBookLabel = new javax.swing.JLabel();
         borrowBookDueDateTextField = new javax.swing.JTextField();
         jPanel8 = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        memberIdTextField = new javax.swing.JTextField();
+        memberNameLabel = new javax.swing.JLabel();
+        memberContactLabel = new javax.swing.JLabel();
+        memberEmailLabel = new javax.swing.JLabel();
+        memberGenderLabel = new javax.swing.JLabel();
+        memberPasswordLabel = new javax.swing.JLabel();
         memberNameTextField = new javax.swing.JTextField();
         memberPhoneContactTextField = new javax.swing.JTextField();
         memberEmailTextField = new javax.swing.JTextField();
@@ -128,6 +142,7 @@ public class Librarians extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jScrollPane2 = new javax.swing.JScrollPane();
         membersTable = new javax.swing.JTable();
+        clearMemberButton = new javax.swing.JButton();
         jPanel10 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         categoryNameTextField = new javax.swing.JTextField();
@@ -137,37 +152,26 @@ public class Librarians extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         jScrollPane3 = new javax.swing.JScrollPane();
         categoriesTable = new javax.swing.JTable();
+        clearCategoryButton = new javax.swing.JButton();
         jPanel11 = new javax.swing.JPanel();
-        jLabel38 = new javax.swing.JLabel();
-        jTextField32 = new javax.swing.JTextField();
-        jLabel39 = new javax.swing.JLabel();
+        retrurnBookMemberIdLabel = new javax.swing.JLabel();
         jLabel40 = new javax.swing.JLabel();
-        jLabel41 = new javax.swing.JLabel();
-        jLabel42 = new javax.swing.JLabel();
         jLabel43 = new javax.swing.JLabel();
         jLabel44 = new javax.swing.JLabel();
         jLabel45 = new javax.swing.JLabel();
-        jLabel46 = new javax.swing.JLabel();
         jLabel47 = new javax.swing.JLabel();
-        jTextField33 = new javax.swing.JTextField();
-        jTextField34 = new javax.swing.JTextField();
-        jTextField35 = new javax.swing.JTextField();
-        jTextField36 = new javax.swing.JTextField();
-        jTextField37 = new javax.swing.JTextField();
-        jTextField38 = new javax.swing.JTextField();
-        jTextField39 = new javax.swing.JTextField();
-        jTextField40 = new javax.swing.JTextField();
-        jTextField41 = new javax.swing.JTextField();
-        jButton18 = new javax.swing.JButton();
-        jButton19 = new javax.swing.JButton();
+        returnBookMemberIdTextField = new javax.swing.JTextField();
+        returnBookMemberNameTextField = new javax.swing.JTextField();
+        returnBookBookTitleTextField = new javax.swing.JTextField();
+        returnBookDueDateTextField = new javax.swing.JTextField();
+        returnBookReturnDateTextField = new javax.swing.JTextField();
+        returnBookTotalFineTextField = new javax.swing.JTextField();
+        retrunBookButton = new javax.swing.JButton();
+        returnBookSearchButton = new javax.swing.JButton();
         jLabel48 = new javax.swing.JLabel();
-        jTextField42 = new javax.swing.JTextField();
-        jLabel49 = new javax.swing.JLabel();
-        jTextField43 = new javax.swing.JTextField();
-        jLabel50 = new javax.swing.JLabel();
-        jTextField44 = new javax.swing.JTextField();
-        jLabel51 = new javax.swing.JLabel();
-        jTextField45 = new javax.swing.JTextField();
+        returnBookIssueDateTextField = new javax.swing.JTextField();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        borrowedBooksTable = new javax.swing.JTable();
         jPanel6 = new javax.swing.JPanel();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanel12 = new javax.swing.JPanel();
@@ -206,6 +210,7 @@ public class Librarians extends javax.swing.JFrame {
         bookTypeComboBox = new javax.swing.JComboBox<>();
         bookNoOfArticlesPublishedLabel = new javax.swing.JLabel();
         bookNoOfArticlesPublishedTextField = new javax.swing.JTextField();
+        clearBooksButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -279,6 +284,7 @@ public class Librarians extends javax.swing.JFrame {
         });
 
         borrowBookTitleTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        borrowBookTitleTextField.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         borrowBookTitleTextField.setEnabled(false);
         borrowBookTitleTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -287,9 +293,11 @@ public class Librarians extends javax.swing.JFrame {
         });
 
         borrowBookCopiesTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        borrowBookCopiesTextField.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         borrowBookCopiesTextField.setEnabled(false);
 
         borrowBookFinePerDayTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        borrowBookFinePerDayTextField.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         borrowBookFinePerDayTextField.setEnabled(false);
 
         borrowBookmemberIdLabel.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
@@ -301,6 +309,7 @@ public class Librarians extends javax.swing.JFrame {
         borrowBookMemberIdTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
 
         borrowBookMemberNameTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        borrowBookMemberNameTextField.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         borrowBookMemberNameTextField.setEnabled(false);
 
         borrowBookMemberSearchButton.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
@@ -320,6 +329,7 @@ public class Librarians extends javax.swing.JFrame {
         borrowBookLibrarianIdTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
 
         borrowBookLibrarianNameTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        borrowBookLibrarianNameTextField.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         borrowBookLibrarianNameTextField.setEnabled(false);
         borrowBookLibrarianNameTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -347,11 +357,15 @@ public class Librarians extends javax.swing.JFrame {
         borrowBookDateOfIssueLabel.setText("Date of issue:");
 
         borrowBookDateOfIssueTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        borrowBookDateOfIssueTextField.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        borrowBookDateOfIssueTextField.setEnabled(false);
 
         borrowBookLabel.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
         borrowBookLabel.setText("Due date:");
 
         borrowBookDueDateTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        borrowBookDueDateTextField.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        borrowBookDueDateTextField.setEnabled(false);
         borrowBookDueDateTextField.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 borrowBookDueDateTextFieldMouseClicked(evt);
@@ -363,40 +377,41 @@ public class Librarians extends javax.swing.JFrame {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(borrowBookDateOfIssueLabel)
-                        .addGap(29, 29, 29))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
-                                    .addComponent(borrowBookFinePerDayLabel)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(borrowBookFinePerDayTextField))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
-                                    .addComponent(borrowBookBookCopiesLabel)
-                                    .addGap(47, 47, 47)
-                                    .addComponent(borrowBookCopiesTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(borrowBookBookIDLabel)
-                                    .addComponent(borrowBookBookTitleLabel))
-                                .addGap(41, 41, 41)
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel4Layout.createSequentialGroup()
-                                        .addComponent(borrowBookBookIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(borroBookBookSearchButton))
-                                    .addComponent(borrowBookTitleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(13, 13, 13)))
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                                        .addComponent(borrowBookBookCopiesLabel)
+                                        .addGap(51, 51, 51)
+                                        .addComponent(borrowBookCopiesTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(borrowBookBookIDLabel)
+                                            .addComponent(borrowBookBookTitleLabel))
+                                        .addGap(41, 41, 41)
+                                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(borrowBookBookIdTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                                            .addComponent(borrowBookTitleTextField))))
+                                .addGap(23, 23, 23)
+                                .addComponent(borroBookBookSearchButton))
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(borrowBookFinePerDayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(borrowBookDateOfIssueLabel)
+                                            .addComponent(borrowBookFinePerDayLabel))
+                                        .addComponent(borrowBookLabel))
+                                    .addGap(18, 18, 18)
+                                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(borrowBookDueDateTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                                        .addComponent(borrowBookDateOfIssueTextField)))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 118, Short.MAX_VALUE)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -410,31 +425,22 @@ public class Librarians extends javax.swing.JFrame {
                                 .addComponent(borrowBookMemberSearchButton))
                             .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(borrowBookDateOfIssueTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 209, Short.MAX_VALUE)
-                        .addComponent(borrowBookLabel)))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(borrowBookIssueButton, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(80, 80, 80)))
+                .addGap(110, 110, 110)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(borrowBookLibrarianIdLabel)
+                    .addComponent(borrowBookLibrarianNameLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(110, 110, 110)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(borrowBookLibrarianIdLabel)
-                            .addComponent(borrowBookLibrarianNameLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(borrowBookLibrarianIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(borrowBookLibrarianSearchButton))
-                            .addComponent(borrowBookLibrarianNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(borrowBookDueDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(243, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(borrowBookIssueButton)
-                .addGap(406, 406, 406))
+                        .addComponent(borrowBookLibrarianIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(borrowBookLibrarianSearchButton))
+                    .addComponent(borrowBookLibrarianNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(246, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -479,38 +485,35 @@ public class Librarians extends javax.swing.JFrame {
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(borrowBookLibrarianNameLabel)
                             .addComponent(borrowBookLibrarianNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(39, 39, 39)
+                .addGap(31, 31, 31)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(borrowBookDateOfIssueLabel)
-                    .addComponent(borrowBookDateOfIssueTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(borrowBookDateOfIssueTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(24, 24, 24)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(borrowBookLabel)
                     .addComponent(borrowBookDueDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(53, 53, 53)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
                 .addComponent(borrowBookIssueButton)
-                .addContainerGap(253, Short.MAX_VALUE))
+                .addGap(179, 179, 179))
         );
 
         borrowBookTabbedPane.addTab("BORROWING BOOK", jPanel4);
 
-        jLabel9.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel9.setText("ID:");
+        memberNameLabel.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        memberNameLabel.setText("Name:");
 
-        jLabel10.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel10.setText("Name:");
+        memberContactLabel.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        memberContactLabel.setText("Contact:");
 
-        jLabel11.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel11.setText("Contact:");
+        memberEmailLabel.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        memberEmailLabel.setText("Email:");
 
-        jLabel12.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel12.setText("Email:");
+        memberGenderLabel.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        memberGenderLabel.setText("Gernder:");
 
-        jLabel13.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel13.setText("Gernder:");
-
-        jLabel14.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel14.setText("Password:");
-
-        memberIdTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        memberPasswordLabel.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        memberPasswordLabel.setText("Password:");
 
         memberNameTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
 
@@ -561,52 +564,62 @@ public class Librarians extends javax.swing.JFrame {
         membersTable.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         membersTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "ID", "NAME", "CONTACT", "EMAIL", "GENDER", "PASSWORD"
+                "ID", "NAME", "CONTACT", "EMAIL", "GENDER"
             }
         ));
         jScrollPane2.setViewportView(membersTable);
+
+        clearMemberButton.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        clearMemberButton.setText("Clear");
+        clearMemberButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                clearMemberButtonMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel12)
-                            .addComponent(jLabel13)
-                            .addComponent(jLabel14))
+                            .addComponent(memberNameLabel)
+                            .addComponent(memberContactLabel)
+                            .addComponent(memberEmailLabel)
+                            .addComponent(memberGenderLabel)
+                            .addComponent(memberPasswordLabel))
                         .addGap(42, 42, 42)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(memberIdTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
-                            .addComponent(memberNameTextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(memberPhoneContactTextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(memberEmailTextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(memberGenderTextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(memberPasswordTextField, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addComponent(saveMemberButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(updateMemberButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(deleteMemberButton)))
+                            .addComponent(memberNameTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(memberPhoneContactTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(memberEmailTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(memberGenderTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(memberPasswordTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(saveMemberButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(clearMemberButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(40, 40, 40)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(511, Short.MAX_VALUE))
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 740, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addComponent(updateMemberButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(deleteMemberButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(266, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -616,35 +629,34 @@ public class Librarians extends javax.swing.JFrame {
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(memberIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(memberNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel10))
+                            .addComponent(memberNameLabel))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(memberPhoneContactTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel11))
+                            .addComponent(memberContactLabel))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(memberEmailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel12))
+                            .addComponent(memberEmailLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(memberGenderTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel13))
+                            .addComponent(memberGenderLabel))
                         .addGap(13, 13, 13)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel14)
+                            .addComponent(memberPasswordLabel)
                             .addComponent(memberPasswordTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(41, 41, 41)
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(saveMemberButton)
-                            .addComponent(updateMemberButton)
-                            .addComponent(deleteMemberButton)))
+                        .addGap(18, 18, 18)
+                        .addComponent(saveMemberButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(clearMemberButton))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(202, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(updateMemberButton)
+                    .addComponent(deleteMemberButton))
+                .addContainerGap(159, Short.MAX_VALUE))
         );
 
         borrowBookTabbedPane.addTab("MEMBER", jPanel8);
@@ -699,6 +711,14 @@ public class Librarians extends javax.swing.JFrame {
         ));
         jScrollPane3.setViewportView(categoriesTable);
 
+        clearCategoryButton.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        clearCategoryButton.setText("Clear");
+        clearCategoryButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                clearCategoryButtonMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
         jPanel10Layout.setHorizontalGroup(
@@ -709,8 +729,10 @@ public class Librarians extends javax.swing.JFrame {
                     .addGroup(jPanel10Layout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addGap(18, 18, 18)
-                        .addComponent(categoryNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(saveCategoryButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(categoryNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(saveCategoryButton, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
+                    .addComponent(clearCategoryButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -733,7 +755,9 @@ public class Librarians extends javax.swing.JFrame {
                             .addComponent(jLabel8)
                             .addComponent(categoryNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(38, 38, 38)
-                        .addComponent(saveCategoryButton))
+                        .addComponent(saveCategoryButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(clearCategoryButton))
                     .addGroup(jPanel10Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -748,26 +772,14 @@ public class Librarians extends javax.swing.JFrame {
 
         jPanel11.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel38.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel38.setText("Return ID:");
-
-        jTextField32.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
-
-        jLabel39.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel39.setText("Member ID:");
+        retrurnBookMemberIdLabel.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        retrurnBookMemberIdLabel.setText("Member ID:");
 
         jLabel40.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
         jLabel40.setText("Members Name:");
 
-        jLabel41.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel41.setText("Borrower ID:");
-
-        jLabel42.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel42.setText("Book ID:");
-        jLabel42.setToolTipText("");
-
         jLabel43.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel43.setText("Title:");
+        jLabel43.setText("Book Title:");
 
         jLabel44.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
         jLabel44.setText("Due date:");
@@ -775,91 +787,87 @@ public class Librarians extends javax.swing.JFrame {
         jLabel45.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
         jLabel45.setText("Return date:");
 
-        jLabel46.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel46.setText("Fine per day:");
-
         jLabel47.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel47.setText("Total Fine:");
+        jLabel47.setText("Total Fine (Kshs):");
 
-        jTextField33.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
-        jTextField33.setEnabled(false);
+        returnBookMemberIdTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
 
-        jTextField34.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
-        jTextField34.setEnabled(false);
-
-        jTextField35.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
-
-        jTextField36.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
-        jTextField36.setEnabled(false);
-
-        jTextField37.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
-        jTextField37.setEnabled(false);
-        jTextField37.addActionListener(new java.awt.event.ActionListener() {
+        returnBookMemberNameTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        returnBookMemberNameTextField.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        returnBookMemberNameTextField.setEnabled(false);
+        returnBookMemberNameTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField37ActionPerformed(evt);
+                returnBookMemberNameTextFieldActionPerformed(evt);
             }
         });
 
-        jTextField38.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
-        jTextField38.setEnabled(false);
-
-        jTextField39.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
-        jTextField39.setEnabled(false);
-        jTextField39.addActionListener(new java.awt.event.ActionListener() {
+        returnBookBookTitleTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        returnBookBookTitleTextField.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        returnBookBookTitleTextField.setEnabled(false);
+        returnBookBookTitleTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField39ActionPerformed(evt);
+                returnBookBookTitleTextFieldActionPerformed(evt);
             }
         });
 
-        jTextField40.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        returnBookDueDateTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        returnBookDueDateTextField.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        returnBookDueDateTextField.setEnabled(false);
 
-        jTextField41.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        returnBookReturnDateTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        returnBookReturnDateTextField.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        returnBookReturnDateTextField.setEnabled(false);
 
-        jButton18.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
-        jButton18.setText("Return");
-        jButton18.addMouseListener(new java.awt.event.MouseAdapter() {
+        returnBookTotalFineTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        returnBookTotalFineTextField.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        returnBookTotalFineTextField.setEnabled(false);
+
+        retrunBookButton.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
+        retrunBookButton.setText("Return");
+        retrunBookButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton18MouseClicked(evt);
+                retrunBookButtonMouseClicked(evt);
+            }
+        });
+        retrunBookButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                retrunBookButtonActionPerformed(evt);
             }
         });
 
-        jButton19.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
-        jButton19.setText("Search");
-        jButton19.addMouseListener(new java.awt.event.MouseAdapter() {
+        returnBookSearchButton.setFont(new java.awt.Font("Book Antiqua", 1, 14)); // NOI18N
+        returnBookSearchButton.setText("Search");
+        returnBookSearchButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton19MouseClicked(evt);
+                returnBookSearchButtonMouseClicked(evt);
             }
         });
 
         jLabel48.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel48.setText("Release date:");
+        jLabel48.setText("Issue date:");
 
-        jTextField42.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
-        jTextField42.setEnabled(false);
-        jTextField42.addActionListener(new java.awt.event.ActionListener() {
+        returnBookIssueDateTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        returnBookIssueDateTextField.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        returnBookIssueDateTextField.setEnabled(false);
+        returnBookIssueDateTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField42ActionPerformed(evt);
+                returnBookIssueDateTextFieldActionPerformed(evt);
             }
         });
 
-        jLabel49.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel49.setText("Copies:");
-
-        jTextField43.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
-        jTextField43.setEnabled(false);
-
-        jLabel50.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel50.setText("librarian ID:");
-        jLabel50.setToolTipText("");
-
-        jTextField44.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
-        jTextField44.setEnabled(false);
-
-        jLabel51.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
-        jLabel51.setText("Librarian Name:");
-
-        jTextField45.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
-        jTextField45.setEnabled(false);
+        borrowedBooksTable.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        borrowedBooksTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "ID", "Book Title", "Member Name", "Issue Date", "Return Date"
+            }
+        ));
+        jScrollPane4.setViewportView(borrowedBooksTable);
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -868,109 +876,73 @@ public class Librarians extends javax.swing.JFrame {
             .addGroup(jPanel11Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel44)
-                    .addComponent(jLabel48)
-                    .addComponent(jLabel49)
-                    .addComponent(jLabel46, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel43)
-                    .addComponent(jLabel42)
-                    .addComponent(jLabel50)
-                    .addComponent(jLabel51)
-                    .addComponent(jLabel41)
-                    .addComponent(jLabel40)
-                    .addComponent(jLabel45)
-                    .addComponent(jLabel38)
-                    .addComponent(jLabel39))
-                .addGap(34, 34, 34)
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField32, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel11Layout.createSequentialGroup()
-                        .addComponent(jTextField40, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(65, 65, 65)
-                        .addComponent(jLabel47)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTextField41, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(41, 41, 41)
-                        .addComponent(jButton18))
-                    .addGroup(jPanel11Layout.createSequentialGroup()
-                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jTextField43, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField37, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField36, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField38)
-                            .addComponent(jTextField42, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField39)
-                            .addComponent(jTextField35, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField45, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton19))
-                    .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jTextField34, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextField44, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextField33, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(621, Short.MAX_VALUE))
+                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel44)
+                            .addComponent(jLabel48)
+                            .addComponent(jLabel43)
+                            .addComponent(jLabel40)
+                            .addComponent(jLabel45)
+                            .addComponent(retrurnBookMemberIdLabel)
+                            .addComponent(jLabel47))
+                        .addGap(42, 42, 42)
+                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(returnBookMemberNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel11Layout.createSequentialGroup()
+                                .addComponent(returnBookMemberIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(returnBookSearchButton))
+                            .addComponent(returnBookBookTitleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(returnBookIssueDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel11Layout.createSequentialGroup()
+                                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(returnBookTotalFineTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(returnBookReturnDateTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(returnBookDueDateTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(93, 93, 93))))
+                    .addComponent(retrunBookButton, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(44, 44, 44)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 638, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(293, 293, 293))
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel38)
-                    .addComponent(jTextField32, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel11Layout.createSequentialGroup()
                         .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton19)
-                            .addComponent(jTextField35, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel41))
+                            .addComponent(returnBookMemberIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(retrurnBookMemberIdLabel)
+                            .addComponent(returnBookSearchButton))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField33, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel39))
-                        .addGap(9, 9, 9)
-                        .addComponent(jTextField34, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel40))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel50)
-                    .addComponent(jTextField44, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField45, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel51))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField36, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel42))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField37, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel43))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField43, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel49))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField42, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel48))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField38, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel44, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel46)
-                    .addComponent(jTextField39, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(17, 17, 17)
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField40, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel45)
-                    .addComponent(jLabel47, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField41, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton18))
-                .addGap(153, 153, 153))
+                            .addComponent(returnBookMemberNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel40))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(returnBookBookTitleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel43))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(returnBookIssueDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel48))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(returnBookDueDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel44, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(returnBookReturnDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel45))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(returnBookTotalFineTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel47, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(retrunBookButton))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(202, Short.MAX_VALUE))
         );
 
         borrowBookTabbedPane.addTab("RETURN BOOK", jPanel11);
@@ -1015,7 +987,7 @@ public class Librarians extends javax.swing.JFrame {
                     .addGroup(jPanel12Layout.createSequentialGroup()
                         .addGap(98, 98, 98)
                         .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 847, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(246, Short.MAX_VALUE))
+                .addContainerGap(251, Short.MAX_VALUE))
         );
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1093,7 +1065,7 @@ public class Librarians extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButton1)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(1137, Short.MAX_VALUE))
+                .addContainerGap(1142, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1212,6 +1184,14 @@ public class Librarians extends javax.swing.JFrame {
 
         bookNoOfArticlesPublishedTextField.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
 
+        clearBooksButton.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        clearBooksButton.setText("Clear");
+        clearBooksButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                clearBooksButtonMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -1243,7 +1223,8 @@ public class Librarians extends javax.swing.JFrame {
                             .addComponent(bookTitleTextField)
                             .addComponent(bookEditionComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(bookTypeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(bookNoOfArticlesPublishedTextField))))
+                            .addComponent(bookNoOfArticlesPublishedTextField)))
+                    .addComponent(clearBooksButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(46, 46, 46)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1309,8 +1290,10 @@ public class Librarians extends javax.swing.JFrame {
                             .addComponent(bookNoOfArticlesPublishedLabel)
                             .addComponent(bookNoOfArticlesPublishedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(24, 24, 24)
-                        .addComponent(saveBookButton)))
-                .addContainerGap(140, Short.MAX_VALUE))
+                        .addComponent(saveBookButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(clearBooksButton)))
+                .addContainerGap(121, Short.MAX_VALUE))
         );
 
         borrowBookTabbedPane.addTab("BOOK", jPanel3);
@@ -1357,7 +1340,6 @@ public class Librarians extends javax.swing.JFrame {
         email = memberEmailTextField.getText();
         gender = memberGenderTextField.getText();
         password = memberPasswordTextField.getText();
-        id = memberIdTextField.getText();
     }
 
     private void borrowBookTabbedPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_borrowBookTabbedPaneMouseClicked
@@ -1408,7 +1390,7 @@ public class Librarians extends javax.swing.JFrame {
             String sql = "INSERT INTO `readers`"
                     + "( `readers_id`, `reader_Name`, `Contact`, `Email`, `Gender`, `Password`)"
                     + " VALUES (?,?,?,?,?,?)";
-            Connection con = DatabaseConnection.ConnecrDb();
+            Connection con = dBConnectionInterface.connect();
             pst = con.prepareStatement(sql);
 
             if (name == null) {
@@ -1438,7 +1420,7 @@ public class Librarians extends javax.swing.JFrame {
             }
             DefaultTableModel model = (DefaultTableModel) membersTable.getModel();
             model.setRowCount(0);
-            viewTable();
+            displayMembersTable();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
 
@@ -1452,13 +1434,14 @@ public class Librarians extends javax.swing.JFrame {
             String sql = "DELETE FROM `readers` WHERE `readers_id`=?";
             Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
-            pst.setString(1, memberIdTextField.getText());
+            pst.setString(1, member.getId().toString());
 
             pst.executeUpdate();
             JOptionPane.showMessageDialog(null, "DELETE successfully ");
             DefaultTableModel model = (DefaultTableModel) membersTable.getModel();
             model.setRowCount(0);
-            viewTable();
+            displayMembersTable();
+            clearMemberTextFields();
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
@@ -1476,17 +1459,18 @@ public class Librarians extends javax.swing.JFrame {
 
             Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
-            pst.setString(1, memberIdTextField.getText());
-            pst.setString(2, memberNameTextField.getText());
-            pst.setString(3, memberPhoneContactTextField.getText());
-            pst.setString(4, memberEmailTextField.getText());
-            pst.setString(5, memberGenderTextField.getText());
-            pst.setString(6, memberPasswordTextField.getText());
-            pst.executeUpdate();
-            JOptionPane.showMessageDialog(null, "update successfully ");
-            DefaultTableModel model = (DefaultTableModel) membersTable.getModel();
-            model.setRowCount(0);
-            viewTable();
+            pst.setString(1, memberNameTextField.getText());
+            pst.setString(2, memberPhoneContactTextField.getText());
+            pst.setString(3, memberEmailTextField.getText());
+            pst.setString(4, memberGenderTextField.getText());
+            pst.setString(5, memberPasswordTextField.getText());
+            pst.setString(6, member.getId().toString());
+            int menberUpdated = pst.executeUpdate();
+            if(menberUpdated > 0)
+                JOptionPane.showMessageDialog(null, "Member updated successfully.");
+            else
+                JOptionPane.showMessageDialog(null, "Unable to update member");
+            displayMembersTable();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
@@ -1498,7 +1482,7 @@ public class Librarians extends javax.swing.JFrame {
             String sql = "INSERT INTO `category`"
                     + "(`Category_name`)"
                     + " VALUES (?)";
-            Connection con = DatabaseConnection.ConnecrDb();
+            Connection con = dBConnectionInterface.connect();
             pst = con.prepareStatement(sql);
 
             String categoryName = categoryNameTextField.getText();
@@ -1598,18 +1582,18 @@ public class Librarians extends javax.swing.JFrame {
             Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
             pst.setString(1, borrowBookBookIdTextField.getText());
-            rs = pst.executeQuery();
-            if (rs.next()) {
-                String add1 = rs.getString("Title");
+            resultSet = pst.executeQuery();
+            if (resultSet.next()) {
+                String add1 = resultSet.getString("Title");
                 borrowBookTitleTextField.setText(add1);
 
-                String add2 = rs.getString("Copies");
+                String add2 = resultSet.getString("Copies");
                 borrowBookCopiesTextField.setText(add2);
 
-                String add3 = rs.getString("Fineperday");
+                String add3 = resultSet.getString("Fineperday");
                 borrowBookFinePerDayTextField.setText(add3);
 
-                rs.close();
+                resultSet.close();
                 pst.close();
 
                 setBorrowBookDates();
@@ -1620,7 +1604,7 @@ public class Librarians extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e);
         } finally {
             try {
-                rs.close();
+                resultSet.close();
                 pst.close();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
@@ -1635,12 +1619,12 @@ public class Librarians extends javax.swing.JFrame {
             Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
             pst.setString(1, borrowBookMemberIdTextField.getText());
-            rs = pst.executeQuery();
-            if (rs.next()) {
-                String add4 = rs.getString("reader_Name");
+            resultSet = pst.executeQuery();
+            if (resultSet.next()) {
+                String add4 = resultSet.getString("reader_Name");
                 borrowBookMemberNameTextField.setText(add4);
 
-                rs.close();
+                resultSet.close();
                 pst.close();
             } else {
                 JOptionPane.showMessageDialog(null, "reader is not found");
@@ -1649,7 +1633,7 @@ public class Librarians extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e);
         } finally {
             try {
-                rs.close();
+                resultSet.close();
                 pst.close();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
@@ -1664,12 +1648,12 @@ public class Librarians extends javax.swing.JFrame {
             Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
             pst.setString(1, borrowBookLibrarianIdTextField.getText());
-            rs = pst.executeQuery();
-            if (rs.next()) {
-                String add5 = rs.getString("librarian_name");
+            resultSet = pst.executeQuery();
+            if (resultSet.next()) {
+                String add5 = resultSet.getString("librarian_name");
                 borrowBookLibrarianNameTextField.setText(add5);
 
-                rs.close();
+                resultSet.close();
                 pst.close();
             } else {
                 JOptionPane.showMessageDialog(null, "librarian  is not found");
@@ -1678,7 +1662,7 @@ public class Librarians extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e);
         } finally {
             try {
-                rs.close();
+                resultSet.close();
                 pst.close();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
@@ -1689,8 +1673,8 @@ public class Librarians extends javax.swing.JFrame {
     private void borrowBookIssueButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_borrowBookIssueButtonMouseClicked
         // TODO add your handling code here:
         String sql = "INSERT INTO `borrowers`(`Book_id`, `Title`, `copies`, `Fineperday`, `readers_id`,"
-                + "`reader_Name`, `librarian_id`, `librarian_name`, `releasedate`, `duedate`)"
-                + "values(?,?,?,?,?,?,?,?,?,?)";
+                + "`librarian_id`, `releasedate`, `duedate`)"
+                + "values(?,?,?,?,?,?,?,?)";
         try {
             Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
@@ -1699,9 +1683,7 @@ public class Librarians extends javax.swing.JFrame {
             pst.setString(3, borrowBookCopiesTextField.getText());
             pst.setString(4, borrowBookFinePerDayTextField.getText());
             pst.setString(5, borrowBookMemberIdTextField.getText());
-            pst.setString(6, borrowBookMemberNameTextField.getText());
-            pst.setString(7, borrowBookLibrarianIdTextField.getText());
-            pst.setString(8, borrowBookLibrarianNameTextField.getText());
+            pst.setString(6, borrowBookLibrarianIdTextField.getText());
 
             Date today = new Date();
             today.toString();
@@ -1710,71 +1692,86 @@ public class Librarians extends javax.swing.JFrame {
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.DAY_OF_MONTH, 10);
             Date dueDate = cal.getTime();
-            
+
             java.sql.Date todayDBDate = new java.sql.Date(today.getTime());
             java.sql.Date dueDateDBDate = new java.sql.Date(dueDate.getTime());
 
-            pst.setDate(9, todayDBDate);
-            pst.setDate(10, dueDateDBDate);
+            pst.setDate(7, todayDBDate);
+            pst.setDate(8, dueDateDBDate);
 
-            boolean issued = pst.execute();
-            if(issued)
-                JOptionPane.showMessageDialog(null, "Book succcessfully issued.");
-            else 
-                JOptionPane.showMessageDialog(null, "Failed to issue book.");
+            pst.execute();
+            JOptionPane.showMessageDialog(null, "Book succcessfully issued.");
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, e);
             JOptionPane.showMessageDialog(null, "Failed to issue book. An exception occurred. Please try again later.");
         } finally {
             try {
-                rs.close();
+                resultSet.close();
                 pst.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, e);
                 JOptionPane.showMessageDialog(null, "Failed to issue book. An exception occurred. Please try again later.");
             }
         }
     }//GEN-LAST:event_borrowBookIssueButtonMouseClicked
 
-    private void jTextField37ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField37ActionPerformed
+    private void returnBookBookTitleTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnBookBookTitleTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField37ActionPerformed
+    }//GEN-LAST:event_returnBookBookTitleTextFieldActionPerformed
 
-    private void jTextField39ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField39ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField39ActionPerformed
+    private void returnBookSearchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_returnBookSearchButtonMouseClicked
 
-    private void jButton19MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton19MouseClicked
-        // TODO add your handling code here:
-        String sql = "SELECT * FROM `borrowers` WHERE `Borrower_id`=?";
+        if (returnBookMemberIdTextField.getText() == null) {
+            JOptionPane.showMessageDialog(null, "Please input Member ID.");
+        }
+
+        String sql = "SELECT borrowers.readers_id as 'Member ID', readers.reader_name 'Member Name', borrowers.Book_id as 'Book ID', book.Title as 'Book Title', \n"
+                + "releasedate as 'Issue Date', duedate as 'Due Date' FROM `borrowers` \n"
+                + "LEFT JOIN readers ON readers.readers_id = borrowers.readers_id \n"
+                + "LEFT JOIN book ON book.Book_id = borrowers.Book_id \n"
+                + "WHERE borrowers.readers_id = ? and `return_date` IS NULL;";
+
         try {
             Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
-            pst.setString(1, jTextField35.getText());
-            rs = pst.executeQuery();
-            if (rs.next()) {
-                String add6 = rs.getString("readers_id");
-                jTextField33.setText(add6);
+            String id = returnBookMemberIdTextField.getText();
+            pst.setString(1, id);
+            resultSet = pst.executeQuery();
 
-                String add7 = rs.getString("reader_Name");
-                jTextField34.setText(add7);
+            borrowedBooksTable.setModel(DbUtils.resultSetToTableModel(resultSet));
+            
+            String add6 = resultSet.getString("readers_id");
+                returnBookMemberIdTextField.setText(add6);
 
-                String add8 = rs.getString("Book_id");
-                jTextField36.setText(add8);
+                String add7 = resultSet.getString("reader_Name");
+                returnBookMemberNameTextField.setText(add7);
 
-                String add9 = rs.getString("Title");
-                jTextField37.setText(add9);
+                String add9 = resultSet.getString("Title");
+                returnBookBookTitleTextField.setText(add9);
 
-                String add12 = rs.getString("releasedate");
-                jTextField42.setText(add12);
+                String add12 = resultSet.getString("releasedate");
+                returnBookIssueDateTextField.setText(add12);
 
-                String add10 = rs.getString("duedate");
-                jTextField38.setText(add10);
+                String add10 = resultSet.getString("duedate");
+                returnBookDueDateTextField.setText(add10);
 
-                String add11 = rs.getString("Fineperday");
-                jTextField39.setText(add11);
+            if (resultSet.next()) {
+//                String add6 = resultSet.getString("readers_id");
+//                returnBookMemberIdTextField.setText(add6);
+//
+//                String add7 = resultSet.getString("reader_Name");
+//                returnBookMemberNameTextField.setText(add7);
+//
+//                String add9 = resultSet.getString("Title");
+//                returnBookBookTitleTextField.setText(add9);
+//
+//                String add12 = resultSet.getString("releasedate");
+//                returnBookIssueDateTextField.setText(add12);
+//
+//                String add10 = resultSet.getString("duedate");
+//                returnBookDueDateTextField.setText(add10);
 
-                rs.close();
+                resultSet.close();
                 pst.close();
             } else {
                 JOptionPane.showMessageDialog(null, "Book is not found");
@@ -1783,23 +1780,23 @@ public class Librarians extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e);
         } finally {
             try {
-                rs.close();
+                resultSet.close();
                 pst.close();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }
         }
-    }//GEN-LAST:event_jButton19MouseClicked
+    }//GEN-LAST:event_returnBookSearchButtonMouseClicked
 
-    private void jButton18MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton18MouseClicked
-        // TODO add your handling code here:
+    private void retrunBookButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_retrunBookButtonMouseClicked
+
         returnBorrowedBook();
-        delete();
-    }//GEN-LAST:event_jButton18MouseClicked
+        //delete();
+    }//GEN-LAST:event_retrunBookButtonMouseClicked
 
-    private void jTextField42ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField42ActionPerformed
+    private void returnBookIssueDateTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnBookIssueDateTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField42ActionPerformed
+    }//GEN-LAST:event_returnBookIssueDateTextFieldActionPerformed
 
     private void bookFineTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookFineTextFieldActionPerformed
         // TODO add your handling code here:
@@ -1903,36 +1900,59 @@ public class Librarians extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_borrowBookDueDateTextFieldMouseClicked
 
+    private void returnBookMemberNameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnBookMemberNameTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_returnBookMemberNameTextFieldActionPerformed
+
+    private void retrunBookButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retrunBookButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_retrunBookButtonActionPerformed
+
+    private void clearMemberButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clearMemberButtonMouseClicked
+        clearMemberTextFields();
+    }//GEN-LAST:event_clearMemberButtonMouseClicked
+
+    private void clearCategoryButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clearCategoryButtonMouseClicked
+        clearCategroyTextFields();
+    }//GEN-LAST:event_clearCategoryButtonMouseClicked
+
+    private void clearBooksButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clearBooksButtonMouseClicked
+        clearBookTextFields();
+    }//GEN-LAST:event_clearBooksButtonMouseClicked
+
     public void returnBorrowedBook() {
-        String sql = "INSERT INTO `return`(`return_id`, `Borrower_id`, `readers_id`, `reader_Name`, `Book_id`,"
-                + "`Title`, `Duedate`, `Releasedate`, `Returndate`, `Fineperday`, `TotalFIne`)"
-                + "values(?,?,?,?,?,?,?,?,?,?,?)";
+        
+        if(borrowTransaction == null) {
+            JOptionPane.showMessageDialog(null, "Please select a book to be returned.");
+            return;
+        }
+        
+        java.sql.Date returnDate = new java.sql.Date(new Date().getTime());
+        
+        String sql = "UPDATE `borrowers` \n" +
+                        "SET return_date = ?\n" +
+                        "WHERE Borrower_id = ? AND Book_id= ?";
+        
         try {
             Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
-            pst.setString(1, jTextField32.getText());
-            pst.setString(2, jTextField33.getText());
-            pst.setString(3, jTextField34.getText());
-            pst.setString(4, jTextField35.getText());
-            pst.setString(5, jTextField36.getText());
-            pst.setString(6, jTextField37.getText());
-            pst.setString(7, jTextField42.getText());
-            pst.setString(8, jTextField38.getText());
-            pst.setString(9, jTextField39.getText());
-            pst.setString(10, jTextField40.getText());
-            pst.setString(11, jTextField41.getText());
+            pst.setDate(1, returnDate);
+            pst.setString(2, borrowTransaction.getMemberId().toString());
+            pst.setString(3, borrowTransaction.getBookId().toString());
 
             pst.execute();
-            JOptionPane.showMessageDialog(null, "Book return");
+            JOptionPane.showMessageDialog(null, "Book successfully returned.");
             update1();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, e);
+            JOptionPane.showMessageDialog(null, "Failed to return book.");
         } finally {
             try {
-                rs.close();
+                resultSet.close();
                 pst.close();
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e);
+                Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, e);
+                JOptionPane.showMessageDialog(null, "Failed to return book.");
             }
         }
 
@@ -1945,12 +1965,12 @@ public class Librarians extends javax.swing.JFrame {
             String sql = "SELECT * FROM `category`";
             pst = con.prepareStatement(sql);
 
-            rs = pst.executeQuery();
+            resultSet = pst.executeQuery();
             bookCategoryNameComboBox.removeAllItems();
-            while (rs.next()) {
+            while (resultSet.next()) {
                 Category category = new Category();
-                category.setId(Integer.valueOf(rs.getString(1)));
-                category.setName(rs.getString(2));
+                category.setId(Integer.valueOf(resultSet.getString(1)));
+                category.setName(resultSet.getString(2));
 
                 bookCategoryNameComboBox.addItem(category);
                 bookCategoryNameComboBox.setRenderer(new CategoryListCellRenderer());
@@ -1966,7 +1986,7 @@ public class Librarians extends javax.swing.JFrame {
         try {
             Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
-            pst.setString(1, jTextField33.getText());
+            pst.setString(1, returnBookMemberIdTextField.getText());
             pst.execute();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
@@ -1974,15 +1994,15 @@ public class Librarians extends javax.swing.JFrame {
     }
 
     public void update1() {
-        int st = Integer.parseInt(jTextField43.getText());
+        int st = Integer.parseInt("1");
         int q = 1;
         int sup = st + q;
         String s = String.valueOf(sup);
-        jTextField43.setText(s);
+        //jTextField43.setText(s);
         try {
             Connection con = DatabaseConnection.ConnecrDb();
-            String val1 = jTextField36.getText();
-            String val2 = jTextField43.getText();
+            String val1 = ""; //jTextField36.getText();
+            String val2 = ""; //jTextField43.getText();
             String sql = "update book set Book_id='" + val1 + "', "
                     + "Copies='" + val2 + "' where Book_id='" + val1 + "'";
             pst = con.prepareStatement(sql);
@@ -1992,7 +2012,7 @@ public class Librarians extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e);
         } finally {
             try {
-                rs.close();
+                resultSet.close();
                 pst.close();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
@@ -2024,7 +2044,7 @@ public class Librarians extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e);
         } finally {
             try {
-                rs.close();
+                resultSet.close();
                 pst.close();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
@@ -2113,6 +2133,7 @@ public class Librarians extends javax.swing.JFrame {
             Connection conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + db, username, pass);
 
         } catch (SQLException ex) {
+             Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, ex);
 
         } catch (ClassNotFoundException ex) {
@@ -2121,14 +2142,14 @@ public class Librarians extends javax.swing.JFrame {
 
     }
 
-    private void viewTable() {
+    private void displayMembersTable() {
 
         try {
             Connection con = DatabaseConnection.ConnecrDb();
-            String sql = "SELECT * FROM `readers`";
+            String sql = "SELECT readers_id as 'ID', reader_name as 'Name', Email, Contact as 'Phone Number', Gender FROM `readers`";
             pst = con.prepareStatement(sql);
-            rs = pst.executeQuery();
-            membersTable.setModel(DbUtils.resultSetToTableModel(rs));
+            resultSet = pst.executeQuery();
+            membersTable.setModel(DbUtils.resultSetToTableModel(resultSet));
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
@@ -2138,13 +2159,13 @@ public class Librarians extends javax.swing.JFrame {
 
         try {
             Connection con = DatabaseConnection.ConnecrDb();
-            String sql = "SELECT Book_id as 'ID', category.Category_name as 'Category Name', Title, Edition, Author,\n"
+            String sql = "SELECT Book_id as 'ID', book.Category_id as 'Cat ID',category.Category_name as 'Cat Name', Title, Edition, Author,\n"
                     + "Publisher, Copies 'Available Copies', Fineperday AS 'Fine per day', Remarks FROM `book` LEFT JOIN category ON category.Category_id = book.Category_id";
             pst = con.prepareStatement(sql);
-            rs = pst.executeQuery();
-            booksTable.setModel(DbUtils.resultSetToTableModel(rs));
+            resultSet = pst.executeQuery();
+            booksTable.setModel(DbUtils.resultSetToTableModel(resultSet));
         } catch (SQLException ex) {
-            ex.printStackTrace();
+             Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "An error occurred while retrieving books.");
         }
     }
@@ -2155,11 +2176,28 @@ public class Librarians extends javax.swing.JFrame {
             Connection con = DatabaseConnection.ConnecrDb();
             String sql = "SELECT * FROM `category`";
             pst = con.prepareStatement(sql);
-            rs = pst.executeQuery();
-            categoriesTable.setModel(DbUtils.resultSetToTableModel(rs));
+            resultSet = pst.executeQuery();
+            categoriesTable.setModel(DbUtils.resultSetToTableModel(resultSet));
         } catch (SQLException ex) {
-            ex.printStackTrace();
+             Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "An error occurred while retrieving categories.");
+        }
+    }
+    
+    public void displayBorrowedBookTable() {
+        try {
+            Connection con = DatabaseConnection.ConnecrDb();
+            String sql = "SELECT borrowers.readers_id as 'Member ID', readers.reader_name 'Member Name', borrowers.Book_id as 'Book ID', book.Title as 'Book Title', \n"
+                + "releasedate as 'Issue Date', duedate as 'Due Date' FROM `borrowers` \n"
+                + "LEFT JOIN readers ON readers.readers_id = borrowers.readers_id \n"
+                + "LEFT JOIN book ON book.Book_id = borrowers.Book_id \n"
+                + "WHERE `return_date` IS NULL;";
+            pst = con.prepareStatement(sql);
+            resultSet = pst.executeQuery();
+            booksTable.setModel(DbUtils.resultSetToTableModel(resultSet));
+        } catch (SQLException ex) {
+             Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "An error occurred while retrieving books.");
         }
     }
 
@@ -2185,17 +2223,19 @@ public class Librarians extends javax.swing.JFrame {
 
         booksTable.setRowSelectionAllowed(true);
         booksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
             public void valueChanged(ListSelectionEvent event) {
 
                 int bookId = Integer.valueOf(booksTable.getValueAt(booksTable.getSelectedRow(), 0).toString());
                 int categoryId = Integer.valueOf(booksTable.getValueAt(booksTable.getSelectedRow(), 1).toString());
-                String title = booksTable.getValueAt(booksTable.getSelectedRow(), 2).toString();
-                String edition = booksTable.getValueAt(booksTable.getSelectedRow(), 3).toString();
-                String author = booksTable.getValueAt(booksTable.getSelectedRow(), 4).toString();
-                String publisher = booksTable.getValueAt(booksTable.getSelectedRow(), 5).toString();
-                int copies = Integer.valueOf(booksTable.getValueAt(booksTable.getSelectedRow(), 6).toString());
-                int finePerDay = Integer.valueOf(booksTable.getValueAt(booksTable.getSelectedRow(), 7).toString());
-                String remarks = booksTable.getValueAt(booksTable.getSelectedRow(), 8).toString();
+                String categroyName = booksTable.getValueAt(booksTable.getSelectedRow(), 2).toString();
+                String title = booksTable.getValueAt(booksTable.getSelectedRow(), 3).toString();
+                String edition = booksTable.getValueAt(booksTable.getSelectedRow(), 4).toString();
+                String author = booksTable.getValueAt(booksTable.getSelectedRow(), 5).toString();
+                String publisher = booksTable.getValueAt(booksTable.getSelectedRow(), 6).toString();
+                int copies = Integer.valueOf(booksTable.getValueAt(booksTable.getSelectedRow(), 7).toString());
+                int finePerDay = Integer.valueOf(booksTable.getValueAt(booksTable.getSelectedRow(), 8).toString());
+                String remarks = booksTable.getValueAt(booksTable.getSelectedRow(), 9).toString();
 
                 book = new Book();
                 book.setId(bookId);
@@ -2209,6 +2249,72 @@ public class Librarians extends javax.swing.JFrame {
                 book.setRemarks(remarks);
 
                 setBookTextFieldValues();
+
+            }
+        });
+    }
+    
+    private void setBorrowedBooksTableListener() {
+
+        borrowedBooksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent event) {                
+
+                String memberId = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 0).toString();
+                String memberName = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 1).toString();
+                String bookId = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 2).toString();
+                String bookTitle = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 3).toString();
+                String issueDate = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 4).toString();
+                String dueDate = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 5).toString();                
+                
+                borrowTransaction = new BorrowTransaction();
+                borrowTransaction.setMemberId(Integer.parseInt(memberId));
+                borrowTransaction.setBookId(Integer.parseInt(bookId));
+                try {
+                    borrowTransaction.setDueDate(dateFormat.parse(dueDate));
+                } catch (ParseException ex) {
+                    Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                returnBookMemberIdTextField.setText(memberId);
+                returnBookMemberNameTextField.setText(memberName);
+                returnBookBookTitleTextField.setText(bookTitle);
+                returnBookIssueDateTextField.setText(issueDate);
+                returnBookDueDateTextField.setText(dueDate);
+                
+                BookFineFacade bookFacade = new BookFineFacade(borrowTransaction);
+                String bookFine = String.valueOf(bookFacade.createBookFine());
+                returnBookTotalFineTextField.setText(bookFine);
+
+                setReturnBooksTextFieldValues();
+
+            }
+        });
+    }
+    
+    private void setMembersTableListener() {
+
+        membersTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent event) {
+
+                int memberId = Integer.valueOf(membersTable.getValueAt(membersTable.getSelectedRow(), 0).toString());
+                String memberName = membersTable.getValueAt(membersTable.getSelectedRow(), 1).toString();
+                String memberEmail = membersTable.getValueAt(membersTable.getSelectedRow(), 2).toString();
+                String memberContact = membersTable.getValueAt(membersTable.getSelectedRow(), 3).toString();
+                String memberGender = membersTable.getValueAt(membersTable.getSelectedRow(), 4).toString();
+                
+                String memberPassword = "";
+                
+                member = new UserMember();
+                member.setId(memberId);
+                member.setName(memberName);
+                member.setPhoneContact(memberContact);
+                member.setEmail(memberEmail);
+                member.setGender(memberGender);
+                member.setPassword(memberPassword);
+
+                setMemberTextFieldValues();
 
             }
         });
@@ -2256,6 +2362,60 @@ public class Librarians extends javax.swing.JFrame {
                 categoryNameTextField.setText(category.getName());
             }
         }
+    }
+    
+    private void setReturnBooksTextFieldValues() {
+        
+    }
+    
+    private void setMemberTextFieldValues() {
+        if (member != null) {
+            
+            if (member.getName() != null) {
+                memberNameTextField.setText(member.getName());
+            }
+            
+            if (member.getEmail() != null) {
+                memberEmailTextField.setText(member.getEmail());
+            }
+            
+            if (member.getPhoneContact() != null) {
+                memberPhoneContactTextField.setText(member.getPhoneContact());
+            }
+            
+            if (member.getPassword() != null) {
+                memberPasswordTextField.setText(member.getPassword());
+            }
+            
+            if (member.getGender()!= null) {                
+                memberGenderTextField.setText(member.getGender());
+            }
+        }
+    }
+    
+    private void clearMemberTextFields() {
+        member = null;
+        
+        memberNameTextField.setText("");
+        categoryNameTextField.setText("");
+        memberPhoneContactTextField.setText("");
+        memberGenderTextField.setText("");
+        memberPasswordTextField.setText("");
+    }
+    
+    private void clearCategroyTextFields() {
+        category = null;
+        categoryNameTextField.setText("");
+    }
+    
+    private void clearBookTextFields() {
+        bookTitleTextField.setText("");
+        bookAuthorTextField.setText("");
+        bookPublisherTextField.setText("");
+        bookCopiesTextField.setText("");
+        bookFineTextField.setText("");
+        bookRemarkTextField.setText("");
+        bookNoOfArticlesPublishedTextField.setText("");                
     }
 
     private void hideBookFields() {
@@ -2367,41 +2527,29 @@ public class Librarians extends javax.swing.JFrame {
     private javax.swing.JTabbedPane borrowBookTabbedPane;
     private javax.swing.JTextField borrowBookTitleTextField;
     private javax.swing.JLabel borrowBookmemberIdLabel;
+    private javax.swing.JTable borrowedBooksTable;
     private javax.swing.JTable categoriesTable;
     private javax.swing.JTextField categoryNameTextField;
+    private javax.swing.JButton clearBooksButton;
+    private javax.swing.JButton clearCategoryButton;
+    private javax.swing.JButton clearMemberButton;
     private javax.swing.JButton deleteBookButton;
     private javax.swing.JButton deleteCategoryButton;
     private javax.swing.JButton deleteMemberButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton18;
-    private javax.swing.JButton jButton19;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel38;
-    private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel40;
-    private javax.swing.JLabel jLabel41;
-    private javax.swing.JLabel jLabel42;
     private javax.swing.JLabel jLabel43;
     private javax.swing.JLabel jLabel44;
     private javax.swing.JLabel jLabel45;
-    private javax.swing.JLabel jLabel46;
     private javax.swing.JLabel jLabel47;
     private javax.swing.JLabel jLabel48;
-    private javax.swing.JLabel jLabel49;
-    private javax.swing.JLabel jLabel50;
-    private javax.swing.JLabel jLabel51;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
@@ -2417,33 +2565,34 @@ public class Librarians extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTable jTable4;
-    private javax.swing.JTextField jTextField32;
-    private javax.swing.JTextField jTextField33;
-    private javax.swing.JTextField jTextField34;
-    private javax.swing.JTextField jTextField35;
-    private javax.swing.JTextField jTextField36;
-    private javax.swing.JTextField jTextField37;
-    private javax.swing.JTextField jTextField38;
-    private javax.swing.JTextField jTextField39;
-    private javax.swing.JTextField jTextField40;
-    private javax.swing.JTextField jTextField41;
-    private javax.swing.JTextField jTextField42;
-    private javax.swing.JTextField jTextField43;
-    private javax.swing.JTextField jTextField44;
-    private javax.swing.JTextField jTextField45;
+    private javax.swing.JLabel memberContactLabel;
+    private javax.swing.JLabel memberEmailLabel;
     private javax.swing.JTextField memberEmailTextField;
+    private javax.swing.JLabel memberGenderLabel;
     private javax.swing.JTextField memberGenderTextField;
-    private javax.swing.JTextField memberIdTextField;
+    private javax.swing.JLabel memberNameLabel;
     private javax.swing.JTextField memberNameTextField;
+    private javax.swing.JLabel memberPasswordLabel;
     private javax.swing.JTextField memberPasswordTextField;
     private javax.swing.JTextField memberPhoneContactTextField;
     private javax.swing.JTable membersTable;
+    private javax.swing.JButton retrunBookButton;
+    private javax.swing.JLabel retrurnBookMemberIdLabel;
+    private javax.swing.JTextField returnBookBookTitleTextField;
+    private javax.swing.JTextField returnBookDueDateTextField;
+    private javax.swing.JTextField returnBookIssueDateTextField;
+    private javax.swing.JTextField returnBookMemberIdTextField;
+    private javax.swing.JTextField returnBookMemberNameTextField;
+    private javax.swing.JTextField returnBookReturnDateTextField;
+    private javax.swing.JButton returnBookSearchButton;
+    private javax.swing.JTextField returnBookTotalFineTextField;
     private javax.swing.JButton saveBookButton;
     private javax.swing.JButton saveCategoryButton;
     private javax.swing.JButton saveMemberButton;

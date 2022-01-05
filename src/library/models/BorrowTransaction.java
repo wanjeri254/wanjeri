@@ -4,13 +4,13 @@ import java.util.Date;
 
 public class BorrowTransaction {
     
-    private int id;
+    private Integer id;
     
-    private int bookId;
+    private Integer bookId;
     
-    private int memberId;
+    private Integer memberId;
 
-    private int librarianId;    
+    private Integer librarianId;    
     
     private Date issueDate;
     
@@ -20,35 +20,35 @@ public class BorrowTransaction {
     
     private double decimal;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getBookId() {
+    public Integer getBookId() {
         return bookId;
     }
 
-    public void setBookId(int bookId) {
+    public void setBookId(Integer bookId) {
         this.bookId = bookId;
     }
 
-    public int getMemberId() {
+    public Integer getMemberId() {
         return memberId;
     }
 
-    public void setMemberId(int memberId) {
+    public void setMemberId(Integer memberId) {
         this.memberId = memberId;
     }
 
-    public int getLibrarianId() {
+    public Integer getLibrarianId() {
         return librarianId;
     }
 
-    public void setLibrarianId(int librarianId) {
+    public void setLibrarianId(Integer librarianId) {
         this.librarianId = librarianId;
     }
 

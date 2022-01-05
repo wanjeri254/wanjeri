@@ -1,6 +1,6 @@
 package library.models;
 
-public class Member extends BaseUser {
+public class UserMember extends BaseUser {
     
     private String phoneContact;
     
