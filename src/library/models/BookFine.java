@@ -43,30 +43,4 @@ public class BookFine {
     public void setFine(double fine) {
         this.fine = fine;
     }
-
-    public double calculateFine() {
-        double fine = 0.0;
-
-        if (borrowTransaction == null) {
-            return fine;
-        }
-
-        if (book == null) {
-            return fine;
-        }
-
-        if (!isFine) {
-            return fine;
-        }
-
-        long fineDays = borrowTransaction.getReturnDate().getTime() - borrowTransaction.getDueDate().getTime();
-        long days = TimeUnit.DAYS.convert(fineDays, TimeUnit.MILLISECONDS);
-
-        if (days > 0) {
-            return days * book.getFinePerDay();
-        }
-
-        return 0.0;
-    }
-
 }

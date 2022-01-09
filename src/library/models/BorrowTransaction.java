@@ -18,7 +18,7 @@ public class BorrowTransaction {
     
     private Date returnDate;
     
-    private double decimal;
+    private Integer fine;
 
     public Integer getId() {
         return id;
@@ -76,11 +76,11 @@ public class BorrowTransaction {
         this.returnDate = returnDate;
     }
 
-    public double getDecimal() {
-        return decimal;
+    public Integer getFine() {
+        return fine;
     }
 
-    public void setDecimal(double decimal) {
-        this.decimal = decimal;
+    public void setFine(Integer fine) {
+        this.fine = fine;
     }
 }

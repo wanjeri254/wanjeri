@@ -31,7 +31,7 @@ public class BookFineFacade {
         }
 
         Date today = new Date();
-        if(borrowTransaction.getDueDate().before(today)) {
+        if(borrowTransaction.getDueDate().after(today)) {
             return fine;
         }
         
@@ -39,7 +39,7 @@ public class BookFineFacade {
         long days = TimeUnit.DAYS.convert(fineDays, TimeUnit.MILLISECONDS);
 
         if (days > 0) {
-            return days * book.getFinePerDay();
+            return days * borrowTransaction.getFine();
         }
 
         return 0.0;

@@ -54,14 +54,12 @@ public class Librarians extends javax.swing.JFrame {
     PreparedStatement pst = null;
     ResultSet resultSet = null;
 
-    private String id, name, phone, email, gender, password;
-
     private Category category;
     private Category selectedBookCategory;
 
     private Book book;
     private UserMember member;
-    
+
     private BorrowTransaction borrowTransaction;
     private final DBConnectionInterface dBConnectionInterface = new DatabaseConnection();
 
@@ -69,18 +67,17 @@ public class Librarians extends javax.swing.JFrame {
 
     public Librarians() {
         initComponents();
-        setTextFields();
-        
+
         displayCategoriesTable();
         setCategoriesTableListener();
-        
+
         displayBooksTable();
         setBooksTableListener();
-        
+
         displayMembersTable();
         setMembersTableListener();
-        
-        displayBorrowedBookTable();
+
+        displayBorrowedBooksTable();
         setBorrowedBooksTableListener();
     }
 
@@ -172,6 +169,7 @@ public class Librarians extends javax.swing.JFrame {
         returnBookIssueDateTextField = new javax.swing.JTextField();
         jScrollPane4 = new javax.swing.JScrollPane();
         borrowedBooksTable = new javax.swing.JTable();
+        clearReturnBookButton = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanel12 = new javax.swing.JPanel();
@@ -858,16 +856,24 @@ public class Librarians extends javax.swing.JFrame {
         borrowedBooksTable.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         borrowedBooksTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Book Title", "Member Name", "Issue Date", "Return Date"
+                "Member ID", "Member Name", "Book ID", "Book Title", "Book Fine (Kshs)", "Issue Date", "Due Date"
             }
         ));
         jScrollPane4.setViewportView(borrowedBooksTable);
+
+        clearReturnBookButton.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
+        clearReturnBookButton.setText("Clear");
+        clearReturnBookButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                clearReturnBookButtonMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -900,7 +906,11 @@ public class Librarians extends javax.swing.JFrame {
                                     .addComponent(returnBookReturnDateTextField, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(returnBookDueDateTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(93, 93, 93))))
-                    .addComponent(retrunBookButton, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
+                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(clearReturnBookButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(retrunBookButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(93, 93, 93)))
                 .addGap(44, 44, 44)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 638, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(293, 293, 293))
@@ -940,7 +950,9 @@ public class Librarians extends javax.swing.JFrame {
                             .addComponent(returnBookTotalFineTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel47, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addComponent(retrunBookButton))
+                        .addComponent(retrunBookButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(clearReturnBookButton))
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(202, Short.MAX_VALUE))
         );
@@ -1334,13 +1346,6 @@ public class Librarians extends javax.swing.JFrame {
     // public static final String  html = "<html><body><table><tr style=\"border-top:1px solid red\"><th>return_id</th><th>borrower_id</th><th>Member_id</th><th>Members name</th><th>Librarian id</th><th>librarian_name</th><th>Book id</th> <th>title</th><th>copies</th>"
     //      + " <th>release date</th><th>due date</th><th>fine</th>"
     //      + "<th>return date</th> <th>total fine</th></tr><tr><td> </td></tr></table></body></html>";
-    public void setTextFields() {
-        name = memberNameTextField.getText();
-        phone = memberPhoneContactTextField.getText();
-        email = memberEmailTextField.getText();
-        gender = memberGenderTextField.getText();
-        password = memberPasswordTextField.getText();
-    }
 
     private void borrowBookTabbedPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_borrowBookTabbedPaneMouseClicked
         // TODO add your handling code here:
@@ -1388,10 +1393,16 @@ public class Librarians extends javax.swing.JFrame {
         // TODO add your handling code here:
         try {
             String sql = "INSERT INTO `readers`"
-                    + "( `readers_id`, `reader_Name`, `Contact`, `Email`, `Gender`, `Password`)"
-                    + " VALUES (?,?,?,?,?,?)";
+                    + "(`reader_Name`, `Contact`, `Email`, `Gender`, `Password`)"
+                    + " VALUES (?,?,?,?,?)";
             Connection con = dBConnectionInterface.connect();
             pst = con.prepareStatement(sql);
+
+            String name = memberNameTextField.getText();
+            String phone = memberPhoneContactTextField.getText();
+            String email = memberEmailTextField.getText();
+            String gender = memberGenderTextField.getText();
+            String password = memberPasswordTextField.getText();
 
             if (name == null) {
                 JOptionPane.showMessageDialog(null, "Please enter name.");
@@ -1411,12 +1422,12 @@ public class Librarians extends javax.swing.JFrame {
             pst.setString(4, gender);
             pst.setString(5, password);
 
-            int librarianAdded = pst.executeUpdate();
+            int memberAdded = pst.executeUpdate();
 
-            if (librarianAdded == 1) {
-                JOptionPane.showMessageDialog(null, "Librarian added successfully.");
+            if (memberAdded == 1) {
+                JOptionPane.showMessageDialog(null, "Member added successfully.");
             } else {
-                JOptionPane.showMessageDialog(null, "Unable to add librarian. Please try again later.");
+                JOptionPane.showMessageDialog(null, "Unable to add Member. Please try again later.");
             }
             DefaultTableModel model = (DefaultTableModel) membersTable.getModel();
             model.setRowCount(0);
@@ -1466,10 +1477,11 @@ public class Librarians extends javax.swing.JFrame {
             pst.setString(5, memberPasswordTextField.getText());
             pst.setString(6, member.getId().toString());
             int menberUpdated = pst.executeUpdate();
-            if(menberUpdated > 0)
+            if (menberUpdated > 0) {
                 JOptionPane.showMessageDialog(null, "Member updated successfully.");
-            else
+            } else {
                 JOptionPane.showMessageDialog(null, "Unable to update member");
+            }
             displayMembersTable();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
@@ -1699,8 +1711,13 @@ public class Librarians extends javax.swing.JFrame {
             pst.setDate(7, todayDBDate);
             pst.setDate(8, dueDateDBDate);
 
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Book succcessfully issued.");
+            int bookIssued = pst.executeUpdate();
+            if (bookIssued > 0) {
+                JOptionPane.showMessageDialog(null, "Book succcessfully issued.");
+                displayBorrowedBooksTable();
+            } else {
+                JOptionPane.showMessageDialog(null, "Book not issued. An error occusred");
+            }
         } catch (Exception e) {
             Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, e);
             JOptionPane.showMessageDialog(null, "Failed to issue book. An exception occurred. Please try again later.");
@@ -1721,69 +1738,43 @@ public class Librarians extends javax.swing.JFrame {
 
     private void returnBookSearchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_returnBookSearchButtonMouseClicked
 
-        if (returnBookMemberIdTextField.getText() == null) {
+        String memberId = returnBookMemberIdTextField.getText();
+        if (memberId == null || memberId.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please input Member ID.");
+            return;
         }
 
         String sql = "SELECT borrowers.readers_id as 'Member ID', readers.reader_name 'Member Name', borrowers.Book_id as 'Book ID', book.Title as 'Book Title', \n"
                 + "releasedate as 'Issue Date', duedate as 'Due Date' FROM `borrowers` \n"
                 + "LEFT JOIN readers ON readers.readers_id = borrowers.readers_id \n"
                 + "LEFT JOIN book ON book.Book_id = borrowers.Book_id \n"
-                + "WHERE borrowers.readers_id = ? and `return_date` IS NULL;";
+                + "WHERE borrowers.readers_id = ? and `return_date` IS NULL";
 
         try {
             Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
-            String id = returnBookMemberIdTextField.getText();
-            pst.setString(1, id);
+            int readerId = Integer.parseInt(memberId);
+
+            pst.setInt(1, readerId);
             resultSet = pst.executeQuery();
 
-            borrowedBooksTable.setModel(DbUtils.resultSetToTableModel(resultSet));
-            
-            String add6 = resultSet.getString("readers_id");
-                returnBookMemberIdTextField.setText(add6);
-
-                String add7 = resultSet.getString("reader_Name");
-                returnBookMemberNameTextField.setText(add7);
-
-                String add9 = resultSet.getString("Title");
-                returnBookBookTitleTextField.setText(add9);
-
-                String add12 = resultSet.getString("releasedate");
-                returnBookIssueDateTextField.setText(add12);
-
-                String add10 = resultSet.getString("duedate");
-                returnBookDueDateTextField.setText(add10);
-
-            if (resultSet.next()) {
-//                String add6 = resultSet.getString("readers_id");
-//                returnBookMemberIdTextField.setText(add6);
-//
-//                String add7 = resultSet.getString("reader_Name");
-//                returnBookMemberNameTextField.setText(add7);
-//
-//                String add9 = resultSet.getString("Title");
-//                returnBookBookTitleTextField.setText(add9);
-//
-//                String add12 = resultSet.getString("releasedate");
-//                returnBookIssueDateTextField.setText(add12);
-//
-//                String add10 = resultSet.getString("duedate");
-//                returnBookDueDateTextField.setText(add10);
-
-                resultSet.close();
-                pst.close();
-            } else {
-                JOptionPane.showMessageDialog(null, "Book is not found");
+            if (!resultSet.next()) {
+                JOptionPane.showMessageDialog(null, "The Member has no borrowed book.");
+                return;
             }
+
+            borrowedBooksTable.setModel(DbUtils.resultSetToTableModel(resultSet));
+
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, e);
+            JOptionPane.showMessageDialog(null, "Sorry, an error occured.");
         } finally {
             try {
                 resultSet.close();
                 pst.close();
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e);
+                Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, e);
+                JOptionPane.showMessageDialog(null, "Sorry, an error occured.");
             }
         }
     }//GEN-LAST:event_returnBookSearchButtonMouseClicked
@@ -1920,40 +1911,56 @@ public class Librarians extends javax.swing.JFrame {
         clearBookTextFields();
     }//GEN-LAST:event_clearBooksButtonMouseClicked
 
+    private void clearReturnBookButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clearReturnBookButtonMouseClicked
+
+        returnBookMemberIdTextField.setText("");
+        returnBookMemberNameTextField.setText("");
+        returnBookBookTitleTextField.setText("");
+        returnBookIssueDateTextField.setText("");
+        returnBookDueDateTextField.setText("");
+        returnBookReturnDateTextField.setText("");
+        returnBookTotalFineTextField.setText("");
+
+        displayBorrowedBooksTable();
+    }//GEN-LAST:event_clearReturnBookButtonMouseClicked
+
     public void returnBorrowedBook() {
-        
-        if(borrowTransaction == null) {
+
+        if (borrowTransaction == null || borrowTransaction.getMemberId() == null || borrowTransaction.getBookId() == null) {
             JOptionPane.showMessageDialog(null, "Please select a book to be returned.");
             return;
         }
         
+//        Date today = new Date();
+//        Calendar c = Calendar.getInstance();
+//        c.setTime(today);
+//        c.add(Calendar.DATE, 11);
+//        Date testReturnDate = c.getTime();
+
         java.sql.Date returnDate = new java.sql.Date(new Date().getTime());
-        
-        String sql = "UPDATE `borrowers` \n" +
-                        "SET return_date = ?\n" +
-                        "WHERE Borrower_id = ? AND Book_id= ?";
-        
+
+        String sql = "UPDATE `borrowers` \n"
+                + "SET return_date = ?\n"
+                + "WHERE readers_id = ? AND Book_id= ?";
+
         try {
             Connection con = DatabaseConnection.ConnecrDb();
             pst = con.prepareStatement(sql);
             pst.setDate(1, returnDate);
-            pst.setString(2, borrowTransaction.getMemberId().toString());
-            pst.setString(3, borrowTransaction.getBookId().toString());
+            pst.setInt(2, borrowTransaction.getMemberId());
+            pst.setInt(3, borrowTransaction.getBookId());
 
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Book successfully returned.");
-            update1();
+            int bookRurned = pst.executeUpdate();
+            if (bookRurned > 0) {
+                JOptionPane.showMessageDialog(null, "Book successfully returned.");
+                displayBorrowedBooksTable();
+                update1();
+            } else {
+                JOptionPane.showMessageDialog(null, "Unable to return book.");
+            }
         } catch (Exception e) {
             Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, e);
             JOptionPane.showMessageDialog(null, "Failed to return book.");
-        } finally {
-            try {
-                resultSet.close();
-                pst.close();
-            } catch (Exception e) {
-                Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, e);
-                JOptionPane.showMessageDialog(null, "Failed to return book.");
-            }
         }
 
     }
@@ -2133,7 +2140,7 @@ public class Librarians extends javax.swing.JFrame {
             Connection conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + db, username, pass);
 
         } catch (SQLException ex) {
-             Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, ex);
 
         } catch (ClassNotFoundException ex) {
@@ -2165,7 +2172,7 @@ public class Librarians extends javax.swing.JFrame {
             resultSet = pst.executeQuery();
             booksTable.setModel(DbUtils.resultSetToTableModel(resultSet));
         } catch (SQLException ex) {
-             Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "An error occurred while retrieving books.");
         }
     }
@@ -2179,24 +2186,33 @@ public class Librarians extends javax.swing.JFrame {
             resultSet = pst.executeQuery();
             categoriesTable.setModel(DbUtils.resultSetToTableModel(resultSet));
         } catch (SQLException ex) {
-             Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "An error occurred while retrieving categories.");
         }
     }
-    
-    public void displayBorrowedBookTable() {
+
+    public void displayBorrowedBooksTable() {
         try {
             Connection con = DatabaseConnection.ConnecrDb();
             String sql = "SELECT borrowers.readers_id as 'Member ID', readers.reader_name 'Member Name', borrowers.Book_id as 'Book ID', book.Title as 'Book Title', \n"
-                + "releasedate as 'Issue Date', duedate as 'Due Date' FROM `borrowers` \n"
-                + "LEFT JOIN readers ON readers.readers_id = borrowers.readers_id \n"
-                + "LEFT JOIN book ON book.Book_id = borrowers.Book_id \n"
-                + "WHERE `return_date` IS NULL;";
+                    + "book.Fineperday as 'Book Fine/Day', releasedate as 'Issue Date', duedate as 'Due Date' FROM `borrowers` \n"
+                    + "LEFT JOIN readers ON readers.readers_id = borrowers.readers_id \n"
+                    + "LEFT JOIN book ON book.Book_id = borrowers.Book_id \n"
+                    + "WHERE `return_date` IS NULL;";
             pst = con.prepareStatement(sql);
             resultSet = pst.executeQuery();
-            booksTable.setModel(DbUtils.resultSetToTableModel(resultSet));
+
+            // First clear the table then populate it to prevent multiple population by other methods
+            DefaultTableModel model = (DefaultTableModel) borrowedBooksTable.getModel();
+            model.setRowCount(0);
+            borrowedBooksTable.setModel(model);
+            if (resultSet.next()) {
+                borrowedBooksTable.setModel(DbUtils.resultSetToTableModel(resultSet));
+            } else {
+                JOptionPane.showMessageDialog(null, "There are no borrowed books.");
+            }
         } catch (SQLException ex) {
-             Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "An error occurred while retrieving books.");
         }
     }
@@ -2204,6 +2220,7 @@ public class Librarians extends javax.swing.JFrame {
     private void setCategoriesTableListener() {
 
         categoriesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
             public void valueChanged(ListSelectionEvent event) {
 
                 int categoryId = Integer.valueOf(categoriesTable.getValueAt(categoriesTable.getSelectedRow(), 0).toString());
@@ -2253,35 +2270,42 @@ public class Librarians extends javax.swing.JFrame {
             }
         });
     }
-    
+
     private void setBorrowedBooksTableListener() {
 
         borrowedBooksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
-            public void valueChanged(ListSelectionEvent event) {                
+            public void valueChanged(ListSelectionEvent event) {
 
                 String memberId = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 0).toString();
                 String memberName = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 1).toString();
                 String bookId = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 2).toString();
-                String bookTitle = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 3).toString();
-                String issueDate = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 4).toString();
-                String dueDate = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 5).toString();                
-                
+                String bookTitle = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 3).toString();                
+                String bookFinePerDay = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 4).toString();
+                String issueDate = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 5).toString();
+                String dueDate = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 6).toString();
+
                 borrowTransaction = new BorrowTransaction();
                 borrowTransaction.setMemberId(Integer.parseInt(memberId));
                 borrowTransaction.setBookId(Integer.parseInt(bookId));
+                borrowTransaction.setFine(Integer.parseInt(bookFinePerDay));
                 try {
-                    borrowTransaction.setDueDate(dateFormat.parse(dueDate));
+                    SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    borrowTransaction.setDueDate(sqlDateFormat.parse(dueDate));
+                    borrowTransaction.setIssueDate(sqlDateFormat.parse(issueDate));
                 } catch (ParseException ex) {
                     Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+
                 returnBookMemberIdTextField.setText(memberId);
                 returnBookMemberNameTextField.setText(memberName);
                 returnBookBookTitleTextField.setText(bookTitle);
-                returnBookIssueDateTextField.setText(issueDate);
-                returnBookDueDateTextField.setText(dueDate);
-                
+                returnBookIssueDateTextField.setText(dateFormat.format(borrowTransaction.getIssueDate()));
+                returnBookDueDateTextField.setText(dateFormat.format(borrowTransaction.getDueDate()));
+
+                Date today = new Date();
+                returnBookReturnDateTextField.setText(dateFormat.format(today));
+
                 BookFineFacade bookFacade = new BookFineFacade(borrowTransaction);
                 String bookFine = String.valueOf(bookFacade.createBookFine());
                 returnBookTotalFineTextField.setText(bookFine);
@@ -2291,7 +2315,7 @@ public class Librarians extends javax.swing.JFrame {
             }
         });
     }
-    
+
     private void setMembersTableListener() {
 
         membersTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -2303,9 +2327,9 @@ public class Librarians extends javax.swing.JFrame {
                 String memberEmail = membersTable.getValueAt(membersTable.getSelectedRow(), 2).toString();
                 String memberContact = membersTable.getValueAt(membersTable.getSelectedRow(), 3).toString();
                 String memberGender = membersTable.getValueAt(membersTable.getSelectedRow(), 4).toString();
-                
+
                 String memberPassword = "";
-                
+
                 member = new UserMember();
                 member.setId(memberId);
                 member.setName(memberName);
@@ -2363,51 +2387,51 @@ public class Librarians extends javax.swing.JFrame {
             }
         }
     }
-    
+
     private void setReturnBooksTextFieldValues() {
-        
+
     }
-    
+
     private void setMemberTextFieldValues() {
         if (member != null) {
-            
+
             if (member.getName() != null) {
                 memberNameTextField.setText(member.getName());
             }
-            
+
             if (member.getEmail() != null) {
                 memberEmailTextField.setText(member.getEmail());
             }
-            
+
             if (member.getPhoneContact() != null) {
                 memberPhoneContactTextField.setText(member.getPhoneContact());
             }
-            
+
             if (member.getPassword() != null) {
                 memberPasswordTextField.setText(member.getPassword());
             }
-            
-            if (member.getGender()!= null) {                
+
+            if (member.getGender() != null) {
                 memberGenderTextField.setText(member.getGender());
             }
         }
     }
-    
+
     private void clearMemberTextFields() {
         member = null;
-        
+
         memberNameTextField.setText("");
-        categoryNameTextField.setText("");
         memberPhoneContactTextField.setText("");
         memberGenderTextField.setText("");
         memberPasswordTextField.setText("");
+        memberEmailTextField.setText("");
     }
-    
+
     private void clearCategroyTextFields() {
         category = null;
         categoryNameTextField.setText("");
     }
-    
+
     private void clearBookTextFields() {
         bookTitleTextField.setText("");
         bookAuthorTextField.setText("");
@@ -2415,7 +2439,7 @@ public class Librarians extends javax.swing.JFrame {
         bookCopiesTextField.setText("");
         bookFineTextField.setText("");
         bookRemarkTextField.setText("");
-        bookNoOfArticlesPublishedTextField.setText("");                
+        bookNoOfArticlesPublishedTextField.setText("");
     }
 
     private void hideBookFields() {
@@ -2533,6 +2557,7 @@ public class Librarians extends javax.swing.JFrame {
     private javax.swing.JButton clearBooksButton;
     private javax.swing.JButton clearCategoryButton;
     private javax.swing.JButton clearMemberButton;
+    private javax.swing.JButton clearReturnBookButton;
     private javax.swing.JButton deleteBookButton;
     private javax.swing.JButton deleteCategoryButton;
     private javax.swing.JButton deleteMemberButton;
