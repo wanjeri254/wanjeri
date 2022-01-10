@@ -1,7 +1,5 @@
 package library.models;
 
-import java.util.concurrent.TimeUnit;
-
 public class BookFine {
 
     private BorrowTransaction borrowTransaction;

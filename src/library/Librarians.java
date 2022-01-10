@@ -1514,7 +1514,8 @@ public class Librarians extends javax.swing.JFrame {
             model.setRowCount(0);
             displayCategoriesTable();
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
+            Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Unable to add category please try again later.");
 
         }
     }//GEN-LAST:event_saveCategoryButtonMouseClicked
@@ -2307,7 +2308,7 @@ public class Librarians extends javax.swing.JFrame {
                 returnBookReturnDateTextField.setText(dateFormat.format(today));
 
                 BookFineFacade bookFacade = new BookFineFacade(borrowTransaction);
-                String bookFine = String.valueOf(bookFacade.createBookFine());
+                String bookFine = String.format("%.2f", bookFacade.createBookFine());
                 returnBookTotalFineTextField.setText(bookFine);
 
                 setReturnBooksTextFieldValues();
