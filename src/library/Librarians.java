@@ -1444,7 +1444,7 @@ public class Librarians extends javax.swing.JFrame {
             DefaultTableModel model = (DefaultTableModel) membersTable.getModel();
             model.setRowCount(0);
             membersTable.setModel(model);
-            
+
             displayMembersTable();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
@@ -1462,7 +1462,7 @@ public class Librarians extends javax.swing.JFrame {
             pst.setString(1, member.getId().toString());
 
             pst.executeUpdate();
-            JOptionPane.showMessageDialog(null, "DELETE successfully ");
+            JOptionPane.showMessageDialog(null, "Member deleted successfully.");
             DefaultTableModel model = (DefaultTableModel) membersTable.getModel();
             model.setRowCount(0);
             displayMembersTable();
@@ -1526,6 +1526,8 @@ public class Librarians extends javax.swing.JFrame {
 
             DefaultTableModel model = (DefaultTableModel) categoriesTable.getModel();
             model.setRowCount(0);
+            categoriesTable.setModel(model);
+
             displayCategoriesTable();
         } catch (SQLException ex) {
             Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
@@ -1557,6 +1559,13 @@ public class Librarians extends javax.swing.JFrame {
             }
             String deletedMsg = deleteCount + " categories deleted";
             JOptionPane.showMessageDialog(null, deletedMsg);
+
+            DefaultTableModel clearRowsModel = (DefaultTableModel) categoriesTable.getModel();
+            clearRowsModel.setRowCount(0);
+            categoriesTable.setModel(clearRowsModel);
+
+            clearCategroyTextFields();
+
             displayCategoriesTable();
 
         } catch (SQLException ex) {
@@ -1583,6 +1592,8 @@ public class Librarians extends javax.swing.JFrame {
 
             DefaultTableModel model = (DefaultTableModel) categoriesTable.getModel();
             model.setRowCount(0);
+            categoriesTable.setModel(model);
+
             displayCategoriesTable();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -2254,14 +2265,17 @@ public class Librarians extends javax.swing.JFrame {
             @Override
             public void valueChanged(ListSelectionEvent event) {
 
-                int categoryId = Integer.valueOf(categoriesTable.getValueAt(categoriesTable.getSelectedRow(), 0).toString());
-                String categoryName = categoriesTable.getValueAt(categoriesTable.getSelectedRow(), 1).toString();
-                category = new Category();
+                if (categoriesTable.getSelectedRow() > 0) {
 
-                category.setId(categoryId);
-                category.setName(categoryName);
+                    int categoryId = Integer.valueOf(categoriesTable.getValueAt(categoriesTable.getSelectedRow(), 0).toString());
+                    String categoryName = categoriesTable.getValueAt(categoriesTable.getSelectedRow(), 1).toString();
+                    category = new Category();
 
-                setCategoryTextFieldValues();
+                    category.setId(categoryId);
+                    category.setName(categoryName);
+
+                    setCategoryTextFieldValues();
+                }
 
             }
         });
@@ -2274,33 +2288,35 @@ public class Librarians extends javax.swing.JFrame {
             @Override
             public void valueChanged(ListSelectionEvent event) {
 
-                int bookId = Integer.valueOf(booksTable.getValueAt(booksTable.getSelectedRow(), 0).toString());
-                int categoryId = Integer.valueOf(booksTable.getValueAt(booksTable.getSelectedRow(), 1).toString());
-                String categoryName = booksTable.getValueAt(booksTable.getSelectedRow(), 2).toString();
-                String title = booksTable.getValueAt(booksTable.getSelectedRow(), 3).toString();
-                String edition = booksTable.getValueAt(booksTable.getSelectedRow(), 4).toString();
-                String author = booksTable.getValueAt(booksTable.getSelectedRow(), 5).toString();
-                String publisher = booksTable.getValueAt(booksTable.getSelectedRow(), 6).toString();
-                int copies = Integer.valueOf(booksTable.getValueAt(booksTable.getSelectedRow(), 7).toString());
-                int finePerDay = Integer.valueOf(booksTable.getValueAt(booksTable.getSelectedRow(), 8).toString());
-                String remarks = booksTable.getValueAt(booksTable.getSelectedRow(), 9).toString();
+                if (booksTable.getSelectedRow() > 0) {
+                    int bookId = Integer.valueOf(booksTable.getValueAt(booksTable.getSelectedRow(), 0).toString());
+                    int categoryId = Integer.valueOf(booksTable.getValueAt(booksTable.getSelectedRow(), 1).toString());
+                    String categoryName = booksTable.getValueAt(booksTable.getSelectedRow(), 2).toString();
+                    String title = booksTable.getValueAt(booksTable.getSelectedRow(), 3).toString();
+                    String edition = booksTable.getValueAt(booksTable.getSelectedRow(), 4).toString();
+                    String author = booksTable.getValueAt(booksTable.getSelectedRow(), 5).toString();
+                    String publisher = booksTable.getValueAt(booksTable.getSelectedRow(), 6).toString();
+                    int copies = Integer.valueOf(booksTable.getValueAt(booksTable.getSelectedRow(), 7).toString());
+                    int finePerDay = Integer.valueOf(booksTable.getValueAt(booksTable.getSelectedRow(), 8).toString());
+                    String remarks = booksTable.getValueAt(booksTable.getSelectedRow(), 9).toString();
 
-                book = new Book();
-                book.setId(bookId);
-                book.setCategoryId(categoryId);
-                book.setTitle(title);
-                book.setEdition(edition);
-                book.setAuthor(author);
-                book.setPublisher(publisher);
-                book.setCopies(copies);
-                book.setFinePerDay(finePerDay);
-                book.setRemarks(remarks);
+                    book = new Book();
+                    book.setId(bookId);
+                    book.setCategoryId(categoryId);
+                    book.setTitle(title);
+                    book.setEdition(edition);
+                    book.setAuthor(author);
+                    book.setPublisher(publisher);
+                    book.setCopies(copies);
+                    book.setFinePerDay(finePerDay);
+                    book.setRemarks(remarks);
 
-                selectedBookCategory = new Category();
-                selectedBookCategory.setId(categoryId);
-                selectedBookCategory.setName(categoryName);
+                    selectedBookCategory = new Category();
+                    selectedBookCategory.setId(categoryId);
+                    selectedBookCategory.setName(categoryName);
 
-                setBookTextFieldValues();
+                    setBookTextFieldValues();
+                }
 
             }
         });
@@ -2312,40 +2328,42 @@ public class Librarians extends javax.swing.JFrame {
             @Override
             public void valueChanged(ListSelectionEvent event) {
 
-                String memberId = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 0).toString();
-                String memberName = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 1).toString();
-                String bookId = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 2).toString();
-                String bookTitle = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 3).toString();
-                String bookFinePerDay = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 4).toString();
-                String issueDate = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 5).toString();
-                String dueDate = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 6).toString();
+                if (borrowedBooksTable.getSelectedRow() > 0) {
+                    String memberId = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 0).toString();
+                    String memberName = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 1).toString();
+                    String bookId = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 2).toString();
+                    String bookTitle = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 3).toString();
+                    String bookFinePerDay = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 4).toString();
+                    String issueDate = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 5).toString();
+                    String dueDate = borrowedBooksTable.getValueAt(borrowedBooksTable.getSelectedRow(), 6).toString();
 
-                borrowTransaction = new BorrowTransaction();
-                borrowTransaction.setMemberId(Integer.parseInt(memberId));
-                borrowTransaction.setBookId(Integer.parseInt(bookId));
-                borrowTransaction.setFine(Integer.parseInt(bookFinePerDay));
-                try {
-                    SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    borrowTransaction.setDueDate(sqlDateFormat.parse(dueDate));
-                    borrowTransaction.setIssueDate(sqlDateFormat.parse(issueDate));
-                } catch (ParseException ex) {
-                    Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+                    borrowTransaction = new BorrowTransaction();
+                    borrowTransaction.setMemberId(Integer.parseInt(memberId));
+                    borrowTransaction.setBookId(Integer.parseInt(bookId));
+                    borrowTransaction.setFine(Integer.parseInt(bookFinePerDay));
+                    try {
+                        SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        borrowTransaction.setDueDate(sqlDateFormat.parse(dueDate));
+                        borrowTransaction.setIssueDate(sqlDateFormat.parse(issueDate));
+                    } catch (ParseException ex) {
+                        Logger.getLogger(Librarians.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    returnBookMemberIdTextField.setText(memberId);
+                    returnBookMemberNameTextField.setText(memberName);
+                    returnBookBookTitleTextField.setText(bookTitle);
+                    returnBookIssueDateTextField.setText(dateFormat.format(borrowTransaction.getIssueDate()));
+                    returnBookDueDateTextField.setText(dateFormat.format(borrowTransaction.getDueDate()));
+
+                    Date today = new Date();
+                    returnBookReturnDateTextField.setText(dateFormat.format(today));
+
+                    BookFineFacade bookFacade = new BookFineFacade(borrowTransaction);
+                    String bookFine = String.format("%.2f", bookFacade.createBookFine());
+                    returnBookTotalFineTextField.setText(bookFine);
+
+                    setReturnBooksTextFieldValues();
                 }
-
-                returnBookMemberIdTextField.setText(memberId);
-                returnBookMemberNameTextField.setText(memberName);
-                returnBookBookTitleTextField.setText(bookTitle);
-                returnBookIssueDateTextField.setText(dateFormat.format(borrowTransaction.getIssueDate()));
-                returnBookDueDateTextField.setText(dateFormat.format(borrowTransaction.getDueDate()));
-
-                Date today = new Date();
-                returnBookReturnDateTextField.setText(dateFormat.format(today));
-
-                BookFineFacade bookFacade = new BookFineFacade(borrowTransaction);
-                String bookFine = String.format("%.2f", bookFacade.createBookFine());
-                returnBookTotalFineTextField.setText(bookFine);
-
-                setReturnBooksTextFieldValues();
 
             }
         });
@@ -2357,23 +2375,25 @@ public class Librarians extends javax.swing.JFrame {
             @Override
             public void valueChanged(ListSelectionEvent event) {
 
-                int memberId = Integer.valueOf(membersTable.getValueAt(membersTable.getSelectedRow(), 0).toString());
-                String memberName = membersTable.getValueAt(membersTable.getSelectedRow(), 1).toString();
-                String memberEmail = membersTable.getValueAt(membersTable.getSelectedRow(), 2).toString();
-                String memberContact = membersTable.getValueAt(membersTable.getSelectedRow(), 3).toString();
-                String memberGender = membersTable.getValueAt(membersTable.getSelectedRow(), 4).toString();
+                if (membersTable.getSelectedRow() > 0) {
+                    int memberId = Integer.valueOf(membersTable.getValueAt(membersTable.getSelectedRow(), 0).toString());
+                    String memberName = membersTable.getValueAt(membersTable.getSelectedRow(), 1).toString();
+                    String memberEmail = membersTable.getValueAt(membersTable.getSelectedRow(), 2).toString();
+                    String memberContact = membersTable.getValueAt(membersTable.getSelectedRow(), 3).toString();
+                    String memberGender = membersTable.getValueAt(membersTable.getSelectedRow(), 4).toString();
 
-                String memberPassword = "";
+                    String memberPassword = "";
 
-                member = new UserMember();
-                member.setId(memberId);
-                member.setName(memberName);
-                member.setPhoneContact(memberContact);
-                member.setEmail(memberEmail);
-                member.setGender(memberGender);
-                member.setPassword(memberPassword);
+                    member = new UserMember();
+                    member.setId(memberId);
+                    member.setName(memberName);
+                    member.setPhoneContact(memberContact);
+                    member.setEmail(memberEmail);
+                    member.setGender(memberGender);
+                    member.setPassword(memberPassword);
 
-                setMemberTextFieldValues();
+                    setMemberTextFieldValues();
+                }
 
             }
         });
