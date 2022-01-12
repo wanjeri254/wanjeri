@@ -20,7 +20,7 @@ public class Book {
     
     private String remarks;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
